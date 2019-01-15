@@ -1,16 +1,19 @@
 #include "ObjectNameMatcher.h"
 
+#include "gsl/gsl_assert"
+
 namespace shakespear
 {
 
 ObjectNameMatcher::ObjectNameMatcher(QString objectName)
-    : ObjectMatcher(true), _objectName(std::move(objectName))
+    : ObjectMatcher(true), m_objectName(std::move(objectName))
 {
+    Expects(!m_objectName.isEmpty());
 }
 
-bool ObjectNameMatcher::match(const QObject* const object) const
+bool ObjectNameMatcher::match(const QObject& object) const
 {
-    return object->objectName() == _objectName;
+    return object.objectName() == m_objectName;
 }
 
 } // namespace shakespear

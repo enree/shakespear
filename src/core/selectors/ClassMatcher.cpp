@@ -1,19 +1,22 @@
 #include "ClassMatcher.h"
 
+#include "gsl/gsl_assert"
+
 namespace shakespear
 {
 
 ClassMatcher::ClassMatcher(QString className)
-    : ObjectMatcher(true), _className(std::move(className))
+    : ObjectMatcher(true), m_className(std::move(className))
 {
+    Expects(!m_className.isEmpty());
 }
 
-bool ClassMatcher::match(const QObject* const object) const
+bool ClassMatcher::match(const QObject& object) const
 {
-    auto metaObject = object->metaObject();
+    auto metaObject = object.metaObject();
     do
     {
-        if (_className == metaObject->className())
+        if (m_className == metaObject->className())
         {
             return true;
         }

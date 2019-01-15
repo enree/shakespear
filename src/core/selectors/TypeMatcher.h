@@ -14,10 +14,10 @@ class TypeMatcher : public ObjectMatcher
 public:
     explicit TypeMatcher(QString typeName);
 
-    bool match(const QObject* const object) const override;
+    bool match(const QObject& object) const override;
 
 private:
-    QString _typeName;
+    QString m_typeName;
 };
 
 } // namespace shakespear

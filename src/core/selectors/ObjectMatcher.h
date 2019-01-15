@@ -11,17 +11,19 @@ namespace shakespear
 class ObjectMatcher
 {
 public:
-    ObjectMatcher(bool unique) : _unique(unique) {}
+    ObjectMatcher(bool unique) : m_unique(unique) {}
 
-    virtual bool match(const QObject* const object) const = 0;
+    virtual bool match(const QObject& object) const = 0;
 
     bool unique() const
     {
-        return _unique;
+        return m_unique;
     }
 
+    virtual ~ObjectMatcher() = default;
+
 private:
-    bool _unique;
+    bool m_unique;
 };
 
 } // namespace shakespear

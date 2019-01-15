@@ -13,10 +13,10 @@ class ObjectNameMatcher : public ObjectMatcher
 public:
     explicit ObjectNameMatcher(QString objectName);
 
-    bool match(const QObject* const object) const override;
+    bool match(const QObject& object) const override;
 
 private:
-    QString _objectName;
+    QString m_objectName;
 };
 
 } // namespace shakespear
