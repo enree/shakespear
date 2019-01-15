@@ -1,0 +1,9 @@
+[submodule "build"]
+	path = build
+	url = ssh://yurib@gerrit.dev.pkb-rio.com:29418/build
+[submodule "modules/gmock"]
+	path = modules/gmock
+	url = ssh://yurib@gerrit.dev.pkb-rio.com:29418/gmock
+[submodule "modules/coriolis"]
+	path = modules/coriolis
+	url = ssh://yurib@gerrit.dev.pkb-rio.com:29418/coriolis
