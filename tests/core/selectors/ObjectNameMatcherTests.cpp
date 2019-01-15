@@ -7,12 +7,17 @@
 namespace shakespear
 {
 
+TEST(ObjectNameMatcherTest, unique)
+{
+    EXPECT_TRUE(ObjectNameMatcher("shakespear::QObjectSubclass").unique());
+}
+
 TEST(ObjectNameMatcherTest, nameMatch)
 {
     QObject object;
     object.setObjectName("name");
 
-    EXPECT_TRUE(ObjectNameMatcher("name").match(&object));
+    EXPECT_TRUE(ObjectNameMatcher("name").match(object));
 }
 
 TEST(ObjectNameMatcherTest, nameDoNotMatch)
@@ -20,7 +25,7 @@ TEST(ObjectNameMatcherTest, nameDoNotMatch)
     QObject object;
     object.setObjectName("name");
 
-    EXPECT_FALSE(ObjectNameMatcher("name1").match(&object));
+    EXPECT_FALSE(ObjectNameMatcher("name1").match(object));
 }
 
 } // namespace shakespear
