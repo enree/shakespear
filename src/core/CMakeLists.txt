@@ -5,7 +5,7 @@ sharedLib(${PROJECT_NAME}
     QT Core
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS coriolis_core)
+    DEPENDS coriolis_core coriolis_qt)
 
 lint(${PROJECT_NAME})
 
