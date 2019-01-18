@@ -6,12 +6,13 @@ namespace shakespear
 {
 
 /**
- * This matcher match QObject againt property
+ * Match QObject if property @a name is a QStringList and
+ * contains value in it
  */
-class PropertyMatcher : public ObjectMatcher
+class FuzzyPropertyMatcher : public ObjectMatcher
 {
 public:
-    explicit PropertyMatcher(QString name, QString value);
+    explicit FuzzyPropertyMatcher(QString name, QString value);
 
     bool match(const QObject& object) const override;
 

@@ -7,19 +7,16 @@
 namespace shakespear
 {
 
-PropertyMatcher::PropertyMatcher(QString property, QString value)
-    : ObjectMatcher(false)
-    , m_property(std::move(property))
-    , m_value(std::move(value))
+PropertyMatcher::PropertyMatcher(QString name, QString value)
+    : ObjectMatcher(false), m_name(std::move(name)), m_value(std::move(value))
 {
-    Expects(!m_property.isEmpty());
+    Expects(!m_name.isEmpty());
     Expects(!m_value.isEmpty());
 }
 
 bool PropertyMatcher::match(const QObject& object) const
 {
-    return object.property(m_property.toLatin1().constData()).toString()
-           == m_value;
+    return object.property(m_name.toLatin1().constData()).toString() == m_value;
 }
 
 } // namespace shakespear
