@@ -24,6 +24,80 @@ class DuplicateUniqueMatcher : public rio::exception::General
 {
 };
 
+class CompoundMatcherBuilder
+{
+    using matcherBuilder
+        = std::function<std::unique_ptr<ObjectMatcher>(const QString&)>;
+
+public:
+    CompoundMatcherBuilder() : m_matcher(std::make_unique<CompoundMatcher>())
+    {
+        m_builders["id"] = [this](const QString& captured) {
+            m_matchedParts += ("#" + captured);
+            return std::make_unique<ObjectNameMatcher>(captured);
+        };
+        m_builders["type"] = [this](const QString& captured) {
+            m_matchedParts += ("." + captured);
+            return std::make_unique<TypeMatcher>(captured);
+        };
+        m_builders["class"] = [this](const QString& captured) {
+            m_matchedParts += captured;
+            return std::make_unique<ClassMatcher>(captured);
+        };
+
+        m_builders["property"] =
+            [this](const QString& captured) -> std::unique_ptr<ObjectMatcher> {
+            m_matchedParts += ("[" + captured + "]");
+
+            const QRegularExpression propertyRegExp(
+                R"((?<name>\w+)(?<op>~?=)\"(?<value>\w+)\")");
+            QRegularExpressionMatch propertyMatch
+                = propertyRegExp.match(captured);
+
+            const QString propertyName = propertyMatch.captured("name");
+            const QString propertyValue = propertyMatch.captured("value");
+            const QString eqOp = propertyMatch.captured("op");
+
+            if (eqOp == "=")
+            {
+                return std::make_unique<
+                    PropertyMatcher>(propertyName, propertyValue);
+            }
+
+            return std::make_unique<
+                FuzzyPropertyMatcher>(propertyName, propertyValue);
+        };
+    }
+
+    void addMatch(const QRegularExpressionMatch& match)
+    {
+        for (const auto& builder: m_builders)
+        {
+            QString matchedString = match.captured(builder.first);
+            if (!matchedString.isEmpty())
+            {
+                m_matcher->add(builder.second(matchedString));
+            }
+        }
+    }
+
+    std::unique_ptr<CompoundMatcher> take()
+    {
+        return std::move(m_matcher);
+    }
+
+    QString processedSelector() const
+    {
+        return m_matchedParts;
+    }
+
+private:
+    std::unique_ptr<CompoundMatcher> m_matcher;
+    std::map<QString, matcherBuilder> m_builders;
+
+    QString m_matchedParts;
+};
+
 } // namespace
 
 CompoundMatcher::CompoundMatcher() : ObjectMatcher(false) {}
@@ -57,72 +131,29 @@ bool CompoundMatcher::match(const QObject& object) const
 std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector)
 {
     const QRegularExpression regExp(
-        R"(((^\w+(:{2}\w+)*))|(\#\w+)|(\[\w+~?=\"\w+\"\])|(\.\w+(:{2}\w+)*))");
-    auto compoundMatcher = std::make_unique<CompoundMatcher>();
+        R"((?<class>^\w+(:{2}\w+)*)|\#(?<id>\w+)|\[(?<property>\w+~?=\"\w+\")\]|\.(?<type>\w+(:{2}\w+)*))");
 
-    QString allMatchedParts;
+    CompoundMatcherBuilder matcherBuilder;
+
     QRegularExpressionMatchIterator i = regExp.globalMatch(selector);
     while (i.hasNext())
     {
-        const QRegularExpressionMatch match = i.next();
-        const QString matched = match.captured();
-
         try
         {
-            if (matched.startsWith("#"))
-            {
-                compoundMatcher->add(
-                    std::make_unique<ObjectNameMatcher>(matched.mid(1)));
-            }
-            else if (matched.startsWith("."))
-            {
-                compoundMatcher->add(
-                    std::make_unique<TypeMatcher>(matched.mid(1)));
-            }
-            else if (matched.startsWith("["))
-            {
-                const QRegularExpression propertyRegExp(
-                    R"(\[(\w+)(~?=)\"(\w+)\"\])");
-                QRegularExpressionMatch propertyMatch
-                    = propertyRegExp.match(matched);
-
-                const QString propertyName = propertyMatch.captured(1);
-                const QString propertyValue = propertyMatch.captured(3);
-                const QString eqOp = propertyMatch.captured(2);
-
-                if (eqOp == "=")
-                {
-                    compoundMatcher->add(
-                        std::make_unique<
-                            PropertyMatcher>(propertyName, propertyValue));
-                }
-                else if (eqOp == "~=")
-                {
-
-                    compoundMatcher->add(
-                        std::make_unique<
-                            FuzzyPropertyMatcher>(propertyName, propertyValue));
-                }
-            }
-            else
-            {
-                compoundMatcher->add(std::make_unique<ClassMatcher>(matched));
-            }
+            matcherBuilder.addMatch(i.next());
         }
         catch (const DuplicateUniqueMatcher&)
         {
             BOOST_THROW_EXCEPTION(exception::InvalidSelector(selector));
         }
-
-        allMatchedParts += matched;
     }
 
-    // Selector has unrecognized parts
-    if (allMatchedParts != selector)
+    //     Selector has unrecognized parts
+    if (matcherBuilder.processedSelector() != selector)
     {
         BOOST_THROW_EXCEPTION(exception::InvalidSelector(selector));
     }
-    return compoundMatcher;
+    return matcherBuilder.take();
 }
 
 } // namespace shakespear
