@@ -26,4 +26,9 @@ private:
     std::vector<std::unique_ptr<ObjectMatcher> > m_matchers;
 };
 
+/**
+ * Build matcher from given @a selector
+ */
+std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector);
+
 } // namespace shakespear
