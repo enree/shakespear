@@ -96,7 +96,15 @@ TEST(CompoundMatcherFromSelectorTest, twoPropertiesMatcher)
                     ->match(object));
 }
 
-// TEST(CompoundMatcherFromSelectorTest, twoUniqueSelectorFailed) {}
+TEST(CompoundMatcherFromSelectorTest, fuzzyPropertyMather)
+{
+    QObject object;
+    object.setProperty(
+        "Property",
+        QStringList() << "value1"
+                      << "value2");
+    EXPECT_TRUE(buildMatcher(R"([Property~="value1"])")->match(object));
+}
 
 TEST(CompoundMatcherFromSelectorTest, allFieldsMatcher)
 {

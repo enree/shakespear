@@ -1,6 +1,7 @@
 #include "CompoundMatcher.h"
 
 #include "ClassMatcher.h"
+#include "FuzzyPropertyMatcher.h"
 #include "InvalidSelector.h"
 #include "ObjectNameMatcher.h"
 #include "PropertyMatcher.h"
@@ -56,7 +57,7 @@ bool CompoundMatcher::match(const QObject& object) const
 std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector)
 {
     const QRegularExpression regExp(
-        R"(((^\w+(:{2}\w+)*))|(\#\w+)|(\[\w+\~?=\"\w+\"\])|(\.\w+(:{2}\w+)*))");
+        R"(((^\w+(:{2}\w+)*))|(\#\w+)|(\[\w+~?=\"\w+\"\])|(\.\w+(:{2}\w+)*))");
     auto compoundMatcher = std::make_unique<CompoundMatcher>();
 
     QString allMatchedParts;
@@ -81,7 +82,7 @@ std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector)
             else if (matched.startsWith("["))
             {
                 const QRegularExpression propertyRegExp(
-                    R"(\[(\w+)(=)\"(\w+)\"\])");
+                    R"(\[(\w+)(~?=)\"(\w+)\"\])");
                 QRegularExpressionMatch propertyMatch
                     = propertyRegExp.match(matched);
 
@@ -94,6 +95,13 @@ std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector)
                     compoundMatcher->add(
                         std::make_unique<
                             PropertyMatcher>(propertyName, propertyValue));
+                }
+                else if (eqOp == "~=")
+                {
+
+                    compoundMatcher->add(
+                        std::make_unique<
+                            FuzzyPropertyMatcher>(propertyName, propertyValue));
                 }
             }
             else
