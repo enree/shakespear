@@ -15,4 +15,9 @@ class QObjectSubSubclass : public QObjectSubclass
     Q_OBJECT
 };
 
+class QAlternativeSubSubclass : public QObjectSubclass
+{
+    Q_OBJECT
+};
+
 } // namespace shakespear
