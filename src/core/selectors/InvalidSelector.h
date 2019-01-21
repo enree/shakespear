@@ -5,6 +5,9 @@
 
 #include <QString>
 
+namespace shakespear
+{
+
 namespace exception
 {
 
@@ -19,3 +22,5 @@ public:
 };
 
 } // namespace exception
+
+} // namespace shakespear
