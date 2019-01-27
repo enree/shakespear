@@ -11,3 +11,6 @@ add_subdirectory(launcher)
 add_subdirectory(plugin)
 
 compileTranslations()
+
+createLoggerConfig(${PROJECT_NAME})
+installProjectConfiguration(${PROJECT_NAME} ${CONFIG_PATH} ${COMPONENT_NAME})

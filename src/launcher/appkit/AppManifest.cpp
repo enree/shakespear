@@ -26,7 +26,7 @@ using namespace rio;
 
 std::string AppManifest::id() const
 {
-    return strings::toUtf8(qAppName());
+    return "shakespear";
 }
 
 std::string AppManifest::name() const
@@ -41,7 +41,7 @@ std::string AppManifest::description() const
 
 std::string AppManifest::organization() const
 {
-    return "yuri.borisoff@gmail.com";
+    return strings::toUtf8(QCoreApplication::organizationName());
 }
 
 } // namespace appkit

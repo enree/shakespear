@@ -9,6 +9,8 @@ include(${BUILD_SCRIPTS_PATH}/pack.cmake)
 definePaths(${PROJECT_NAME})
 defineProjectIncludes(${CMAKE_CURRENT_BINARY_DIR})
 
+set(_log_syslog OFF)
+
 addModule(coriolis)
 
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DGSL_THROW_ON_CONTRACT_VIOLATION")

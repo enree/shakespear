@@ -1,4 +1,4 @@
-item(shakespear_launcher)
+item(shakespeare)
 
 generatePaths(shakespear SRC)
 
@@ -8,7 +8,7 @@ executable(${PROJECT_NAME}
     QT Core
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS coriolis_config coriolis_app)
+    DEPENDS coriolis_config coriolis_app shakespear_log)
 
 lint(${PROJECT_NAME})
 

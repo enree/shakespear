@@ -1,0 +1,40 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.1\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en_US\n"
+"X-Source-Language: C\n"
+
+#: main.cpp:89
+msgid "command line"
+msgstr "командная строка"
+
+#: appkit/Paths.cpp:16
+msgid "Config path: "
+msgstr "Конфигурация: "
+
+#: appkit/Paths.cpp:18
+msgid "Plugin path: "
+msgstr "Плагины: "
+
+#: appkit/Paths.cpp:20
+msgid "Cache path: "
+msgstr "Рабочие файлы: "
+
+#: appkit/Paths.cpp:22
+msgid "Log path: "
+msgstr "Логи: "
+
+#: appkit/AppManifest.cpp:34
+msgid "'Shakespear' project"
+msgstr "Проект \"Шейкспир\""
+
+#: appkit/AppManifest.cpp:39
+msgid "Automated Qt-GUI test tool"
+msgstr "Инструмент для автоматизированного GUI тестирования"
