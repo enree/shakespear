@@ -1,7 +1,11 @@
-#include "appkit/AppManifest.h"
-#include "appkit/Paths.h"
-#include "appkit/ReturnCode.h"
-#include "appkit/UnixSignalHandler.h"
+#include "launcher/InvalidRunOptions.h"
+#include "launcher/appkit/AppManifest.h"
+#include "launcher/appkit/Paths.h"
+#include "launcher/appkit/ReturnCode.h"
+#include "launcher/appkit/UnixSignalHandler.h"
+
+#include "launcher/TestRun.h"
+#include "launcher/TestRunner.h"
 
 #include "shakespear/Log.h"
 #include "shakespear/Paths.h"
@@ -12,12 +16,15 @@
 #include "coriolis/qt/StringUtils.h"
 #include "coriolis/qt/TranslationInstaller.h"
 
+#include <gammaray/launcher/launchoptions.h>
+
 #include <QCoreApplication>
 
 #include <boost/algorithm/string/join.hpp>
 
 using namespace rio;
 using namespace shakespear;
+using namespace GammaRay;
 
 int main(int argc, char** argv)
 {
@@ -65,6 +72,13 @@ int main(int argc, char** argv)
     ConfigParser parser;
     ConfigParser::ProgramOptions infoOptions = parser.infoOptions(argc, argv);
 
+    TestRunnerConfig configuration;
+
+    parser.addSubtreeOption(
+        "runner",
+        SHAKESPEAR_TR("Runner options"),
+        createTestRunnerConfigParser(configuration));
+
     // First of all check if we need to show help
     if (infoOptions.count(ConfigParser::HELP) > 0)
     {
@@ -83,12 +97,44 @@ int main(int argc, char** argv)
         return 0;
     }
 
+    // Add tree
+    parser.addPtree(
+        config::fromFile<config::format::INFO>(
+            config::configFileName(argc, argv, paths.configPath + "/aut.conf")),
+        SHAKESPEAR_TR("common config file"));
+
     // Add tree from command line, it will overwrite config values
     parser.addPtree(
         rio::config::fromCommandLine(argc, argv, parser.keys(), false),
         SHAKESPEAR_TR("command line"));
 
-    parser.readAll();
+    try
+    {
+        parser.readAll();
+    }
+    catch (const shakespear::exception::InvalidAbi& ex)
+    {
+        SHAKESPEAR_FATAL("Config", "abi") << ex.what();
+
+        return shakespear::CONFIGURATION_ERROR;
+    }
+    catch (const std::exception& ex)
+    {
+        SHAKESPEAR_FATAL("Config", "read") << ex.what();
+        return shakespear::CONFIGURATION_ERROR;
+    }
+
+    try
+    {
+        auto testRun = createTestRun(configuration.options());
+        QObject::connect(
+            testRun, &TestRun::autReady, &application, &QCoreApplication::quit);
+        testRun->run();
+    }
+    catch (const shakespear::exception::InvalidRunOptions& ex)
+    {
+        SHAKESPEAR_ERROR("Application", "start") << ex.what();
+    }
 
     QCoreApplication::exec();
 }

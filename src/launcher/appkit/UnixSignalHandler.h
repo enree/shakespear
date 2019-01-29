@@ -31,7 +31,7 @@ private slots:
 
 private:
     int m_sockets[2] = { 0, 0 };
-    QSocketNotifier* m_notifier;
+    QSocketNotifier* m_notifier = nullptr;
 
     static const int max_signal = 32;
     static std::array<QPointer<UnixSignalHandler>, max_signal> m_handlers;

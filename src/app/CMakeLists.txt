@@ -1,14 +1,14 @@
-item(launcher)
+item(shakespeare)
 
 generatePaths(shakespear SRC)
 
-sharedLib(${PROJECT_NAME}
+executable(${PROJECT_NAME}
     SOURCES ${SRC}
     GLOBBING "*"
     QT Core
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS coriolis_config coriolis_app gammaray_launcher)
+    DEPENDS launcher shakespear_log gammaray_launcher)
 
 lint(${PROJECT_NAME})
 
