@@ -9,6 +9,7 @@ add_subdirectory(core)
 add_subdirectory(log)
 add_subdirectory(launcher)
 add_subdirectory(plugin)
+add_subdirectory(app)
 
 compileTranslations()
 
