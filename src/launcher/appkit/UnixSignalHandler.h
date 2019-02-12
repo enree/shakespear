@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gsl/pointers"
+
 #include <QObject>
 #include <QPointer>
 
@@ -38,7 +40,7 @@ private:
     static void handle(int signal);
 };
 
-void installSignalHandler(QCoreApplication* app);
+void installSignalHandler(gsl::not_null<QCoreApplication*> app);
 
 } // namespace appkit
 

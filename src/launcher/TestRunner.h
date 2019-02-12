@@ -1,5 +1,9 @@
 #pragma once
 
+#include "TestRun.h"
+
+#include "appkit/Application.h"
+
 #include "coriolis/config/ConfigParser.h"
 
 #include "gammaray/launcher/launchoptions.h"
@@ -34,11 +38,25 @@ private:
     GammaRay::LaunchOptions m_options;
 };
 
-ConfigParser createTestRunnerConfigParser(TestRunnerConfig& config);
-
-class TestRunner
+class TestRunner : public QObject, public appkit::Application
 {
+    Q_OBJECT
 public:
+    TestRunner(
+        int argc,
+        char** argv,
+        const rio::app::AppManifest& manifest,
+        QCoreApplication* app,
+        appkit::Paths paths);
+
+public slots:
+    void runTestSuite();
+
+private:
+    void addSpecificOptions(rio::config::ConfigParser& configParser) override;
+
+private:
+    TestRunnerConfig m_config;
 };
 
 } // namespace shakespear

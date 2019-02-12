@@ -13,10 +13,10 @@ namespace appkit
 
 std::ostream& operator<<(std::ostream& out, const Paths& paths)
 {
-    out << SHAKESPEAR_TR("Config path: ") << paths.configPath << std::endl
-        << SHAKESPEAR_TR("Plugin path: ") << paths.pluginPath << std::endl
-        << SHAKESPEAR_TR("Cache path: ") << paths.cachePath << std::endl
-        << SHAKESPEAR_TR("Log path: ") << paths.logPath << std::endl;
+    out << SHAKESPEAR_TR("Config path: ") << paths.configs << std::endl
+        << SHAKESPEAR_TR("Plugin path: ") << paths.plugins << std::endl
+        << SHAKESPEAR_TR("Cache path: ") << paths.cache << std::endl
+        << SHAKESPEAR_TR("Log path: ") << paths.logs << std::endl;
     return out;
 }
 

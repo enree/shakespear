@@ -17,8 +17,9 @@ public:
     explicit TestRun(
         const GammaRay::LaunchOptions& options, QObject* parent = nullptr);
 
+public slots:
     void run();
-    void stop();
+    void interrupt();
 
 signals:
     void autReady();
@@ -26,8 +27,5 @@ signals:
 private:
     GammaRay::Launcher m_launcher;
 };
-
-TestRun* createTestRun(
-    const GammaRay::LaunchOptions& options, QObject* parent = nullptr);
 
 } // namespace shakespear

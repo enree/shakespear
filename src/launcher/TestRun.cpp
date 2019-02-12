@@ -18,15 +18,6 @@ void TestRun::run()
     m_launcher.start();
 }
 
-void TestRun::stop() {}
-
-TestRun* createTestRun(const GammaRay::LaunchOptions& options, QObject* parent)
-{
-    if (!options.isValid())
-    {
-        BOOST_THROW_EXCEPTION(exception::InvalidRunOptions());
-    }
-    return new TestRun(options, parent);
-}
+void TestRun::interrupt() {}
 
 } // namespace shakespear
