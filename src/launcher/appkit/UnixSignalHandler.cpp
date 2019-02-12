@@ -57,7 +57,7 @@ void UnixSignalHandler::handle(int signal)
 std::array<QPointer<UnixSignalHandler>, UnixSignalHandler::max_signal>
     UnixSignalHandler::m_handlers;
 
-void installSignalHandler(QCoreApplication* app)
+void installSignalHandler(gsl::not_null<QCoreApplication*> app)
 {
 #ifdef SIGINT
     QObject::connect(

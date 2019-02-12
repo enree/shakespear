@@ -13,10 +13,13 @@ namespace appkit
  */
 struct Paths
 {
-    std::string configPath;
-    std::string pluginPath;
-    std::string cachePath;
-    std::string logPath;
+    std::string configs;
+    std::string plugins;
+    std::string cache;
+    std::string translations;
+    std::string logs;
+
+    std::string configFile;
 };
 
 std::ostream& operator<<(std::ostream& out, const Paths& paths);

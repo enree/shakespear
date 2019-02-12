@@ -34,3 +34,31 @@ msgstr "Проект \"Шейкспир\""
 #: appkit/AppManifest.cpp:39
 msgid "Automated Qt-GUI test tool"
 msgstr "Инструмент для автоматизированного GUI тестирования"
+
+#: appkit/Application.cpp:88
+msgid "common config file"
+msgstr "файл конфигурации"
+
+#: appkit/Application.cpp:94
+msgid "command line"
+msgstr "командная строка"
+
+#: TestRunner.cpp:30
+msgid "Application under test"
+msgstr "Приложения для тестирования"
+
+#: TestRunner.cpp:34
+msgid "Probe abi"
+msgstr "БИП"
+
+#: TestRunner.cpp:40
+msgid "Show GammaRay UI on start"
+msgstr "Показывать UI при старте"
+
+#: TestRunner.cpp:82
+msgid "Invalid probe abi: {1}. Available probes are: {2}"
+msgstr "Неверный БИП {1}. Доступный БИПы: {2}"
+
+#: TestRunner.cpp:128
+msgid "Runner options"
+msgstr "Опции запуска"
