@@ -23,6 +23,8 @@ public slots:
 
 signals:
     void autReady();
+    void autStopped();
+    void message(QString text);
 
 private:
     GammaRay::Launcher m_launcher;

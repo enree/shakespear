@@ -4,7 +4,7 @@
 
 #include "gammaray/core/toolfactory.h"
 
-#include <QJSEngine>
+#include <QScriptEngine>
 #include <QWidget>
 
 class QItemSelection;
@@ -24,7 +24,7 @@ public:
 private:
     // This class is owned by JS engine
     shakespear::GammarayObjectSelector* m_selector;
-    QJSEngine m_engine;
+    QScriptEngine m_engine;
 };
 
 class ShapeInjectorFactory

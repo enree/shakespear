@@ -7,6 +7,8 @@
 #include "coriolis/qt/StringUtils.h"
 #include "coriolis/qt/streamSupport.h"
 
+#include "gsl/gsl_assert"
+
 #include <gammaray/launcher/probeabi.h>
 #include <gammaray/launcher/probefinder.h>
 
@@ -71,7 +73,8 @@ void TestRunnerConfig::setAbi(const QString& abiString)
     if (!abi.isValid() || ProbeFinder::findProbe(abi).isEmpty())
     {
         QStringList availableProbes;
-        for (const auto& availableAbi: ProbeFinder::listProbeABIs())
+        const auto& probeAbis = ProbeFinder::listProbeABIs();
+        for (const auto& availableAbi: probeAbis)
         {
             availableProbes
                 += QString("%1(%2)")
@@ -115,6 +118,25 @@ void TestRunner::runTestSuite()
         try
         {
             m_testRun = new TestRun(m_config.options());
+
+            connect(m_testRun, &TestRun::autReady, this, [this]() {
+                emit message(
+                    tr("AUT %1 ready")
+                        .arg(m_config.options().launchArguments().join(" ")));
+            });
+
+            connect(m_testRun, &TestRun::autStopped, this, [this]() {
+                emit message(tr("AUT closed"));
+            });
+
+            connect(
+                m_testRun,
+                &TestRun::autStopped,
+                m_testRun,
+                &TestRun::deleteLater);
+
+            connect(m_testRun, &TestRun::message, this, &TestRunner::message);
+
             m_testRun->run();
         }
         catch (const shakespear::exception::InvalidRunOptions& ex)
@@ -129,7 +151,6 @@ void TestRunner::stopTestSuite()
     if (m_testRun)
     {
         m_testRun->interrupt();
-        m_testRun->deleteLater();
     }
 }
 
