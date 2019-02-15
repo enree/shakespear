@@ -103,21 +103,33 @@ TestRunner::TestRunner(
 {
 }
 
+TestRunner::~TestRunner()
+{
+    stopTestSuite();
+}
+
 void TestRunner::runTestSuite()
 {
-    try
+    if (!m_testRun)
     {
-        auto testRun = new TestRun(m_config.options());
-        //        QObject::connect(
-        //            testRun,
-        //            &TestRun::autReady,
-        //            application.instance(),
-        //            &QCoreApplication::quit);
-        testRun->run();
+        try
+        {
+            m_testRun = new TestRun(m_config.options());
+            m_testRun->run();
+        }
+        catch (const shakespear::exception::InvalidRunOptions& ex)
+        {
+            SHAKESPEAR_ERROR("Application", "start") << ex.what();
+        }
     }
-    catch (const shakespear::exception::InvalidRunOptions& ex)
+}
+
+void TestRunner::stopTestSuite()
+{
+    if (m_testRun)
     {
-        SHAKESPEAR_ERROR("Application", "start") << ex.what();
+        m_testRun->interrupt();
+        m_testRun->deleteLater();
     }
 }
 

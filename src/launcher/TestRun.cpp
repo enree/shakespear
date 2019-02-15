@@ -18,6 +18,9 @@ void TestRun::run()
     m_launcher.start();
 }
 
-void TestRun::interrupt() {}
+void TestRun::interrupt()
+{
+    m_launcher.stop();
+}
 
 } // namespace shakespear

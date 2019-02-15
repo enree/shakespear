@@ -20,6 +20,12 @@ MainForm::MainForm(std::shared_ptr<TestRunner> testRunner, QWidget* parent)
         &QPushButton::clicked,
         m_testRunner.get(),
         &TestRunner::runTestSuite);
+
+    connect(
+        m_ui->stop,
+        &QPushButton::clicked,
+        m_testRunner.get(),
+        &TestRunner::stopTestSuite);
 }
 
 MainForm::~MainForm() {}

@@ -8,6 +8,8 @@
 
 #include "gammaray/launcher/launchoptions.h"
 
+#include <QPointer>
+
 namespace shakespear
 {
 
@@ -49,14 +51,18 @@ public:
         QCoreApplication* app,
         appkit::Paths paths);
 
+    ~TestRunner() override;
+
 public slots:
     void runTestSuite();
+    void stopTestSuite();
 
 private:
     void addSpecificOptions(rio::config::ConfigParser& configParser) override;
 
 private:
     TestRunnerConfig m_config;
+    QPointer<TestRun> m_testRun;
 };
 
 } // namespace shakespear

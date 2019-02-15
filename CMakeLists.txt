@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DGSL_THROW_ON_CONTRACT_VIOLATION")
 
 #TEMPORARY
 set (CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "/home/yuri/gammaray/lib64/cmake")
-set(PROBE_PLUGIN_INSTALL_DIR "/home/yuri/gammaray/lib64/gammaray/2.11/qt5_12-x86_64/")
+set(PROBE_PLUGIN_INSTALL_DIR "/home/yuri/gammaray/lib64/gammaray/2.10/qt5_12-x86_64/")
 
 include(FeatureSummary)
 
@@ -32,6 +32,9 @@ set_package_properties(GammaRay PROPERTIES
 
 # Project main source
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Project examples
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)
 
 # Code checks
 cppcheck(shakespear SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src)

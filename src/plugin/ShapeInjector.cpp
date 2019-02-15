@@ -1,63 +1,37 @@
 #include "ShapeInjector.h"
 
-#include <gammaray/common/objectbroker.h>
-#include <gammaray/common/objectmodel.h>
+#include "GammarayObjectSelector.h"
+
+#include "core/selectors/LookupError.h"
+
 #include <gammaray/core/probe.h>
-#include <gammaray/core/objecttypefilterproxymodel.h>
-#include <gammaray/core/propertycontroller.h>
 
 #include <QItemSelectionModel>
-#include <QLCDNumber>
-#include <QFile>
+#include <QLineEdit>
 #include <QTextStream>
 #include <QTimer>
 
 ShapeInjector::ShapeInjector(GammaRay::Probe* probe, QObject* parent)
     : QObject(parent)
-//    , m_propertyController(
-//          new GammaRay::
-//              PropertyController("com.kdab.GammaRay.ShapeInjector", this))
 {
-//    QAbstractProxyModel* model
-//        = new GammaRay::ObjectTypeFilterProxyModel<QLCDNumber>(this);
-//    model->setSourceModel(probe->objectListModel());
-//    probe->registerModel("com.kdab.GammaRay.LCDWidgetModel", model);
-
-//    m_selectionModel = GammaRay::ObjectBroker::selectionModel(model);
-
-    QTimer::singleShot(300, [probe](){
-        QFile file("/home/yuri/out.txt");
-        file.open(QIODevice::WriteOnly | QIODevice::Text);
-        QTextStream out(&file);
-
+    QTimer::singleShot(100, this, [this, probe]() { // NOLINT
         auto model = probe->objectTreeModel();
-        out << model->rowCount();
-        for (int i = 0; i < model->rowCount(); ++ i)
+
+        m_selector = new shakespear::GammarayObjectSelector(*model);
+
+        auto selector = m_engine.newQObject(m_selector);
+        m_engine.globalObject().setProperty("Shakespear", selector);
+        m_engine.evaluate(
+            "var lineEdit = Shakespear.findObject('.QLineEdit'); "
+            "lineEdit.setText('Welcome, JS');"
+            "Shakespear.findObject('QLabel').setText('New label');");
+
+        try
         {
-            out << model->index(i, 0).data(Qt::DisplayRole).toString() << "|"
-                << model->index(i, 1).data(Qt::DisplayRole).toString() << "\n";
+            m_selector->object<QWidget>("#Widget")->move(300, 300);
         }
-
-        auto indices = model->match(
-            model->index(0, 1),
-            Qt::DisplayRole,
-            "QLCDNumber",
-            1,
-            Qt::MatchExactly | Qt::MatchRecursive);
-
-        out << indices.size();
-        if (indices.size() > 0)
+        catch (const shakespear::exception::LookupError& ex)
         {
-            auto index = indices.first();
-            auto object = index.data(GammaRay::ObjectModel::ObjectRole).value<QObject*>();
-            out << (object != nullptr);
-
-            if (auto number = qobject_cast<QLCDNumber*>(object))
-            {
-                number->display(2);
-            }
         }
     });
-
-
 }

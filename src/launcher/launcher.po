@@ -59,6 +59,6 @@ msgstr "Показывать UI при старте"
 msgid "Invalid probe abi: {1}. Available probes are: {2}"
 msgstr "Неверный БИП {1}. Доступный БИПы: {2}"
 
-#: TestRunner.cpp:128
+#: TestRunner.cpp:140
 msgid "Runner options"
 msgstr "Опции запуска"

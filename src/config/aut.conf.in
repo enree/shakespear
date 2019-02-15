@@ -1,0 +1,7 @@
+runner {
+    aut "@BINARY_PATH@/basic"
+    showUi false
+    abi qt5_12-x86_64
+    suites *
+}
+
