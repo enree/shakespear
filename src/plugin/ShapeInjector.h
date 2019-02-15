@@ -1,7 +1,10 @@
 #pragma once
 
+#include "GammarayObjectSelector.h"
+
 #include "gammaray/core/toolfactory.h"
 
+#include <QJSEngine>
 #include <QWidget>
 
 class QItemSelection;
@@ -19,8 +22,9 @@ public:
     explicit ShapeInjector(GammaRay::Probe* probe, QObject* parent = 0);
 
 private:
-//    QItemSelectionModel* m_selectionModel;
-//    GammaRay::PropertyController* m_propertyController;
+    // This class is owned by JS engine
+    shakespear::GammarayObjectSelector* m_selector;
+    QJSEngine m_engine;
 };
 
 class ShapeInjectorFactory

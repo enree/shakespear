@@ -42,7 +42,7 @@ QObject* ObjectsSelector::findObject() const
 
     if (indices.isEmpty())
     {
-        BOOST_THROW_EXCEPTION(exception::LookupError());
+        BOOST_THROW_EXCEPTION(exception::ObjectNotFound());
     }
 
     if (indices.size() > 1)
