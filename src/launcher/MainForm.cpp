@@ -4,6 +4,7 @@
 #include "ui_MainForm.h"
 
 #include <QPushButton>
+#include <QTextBrowser>
 
 namespace shakespear
 {
@@ -26,8 +27,14 @@ MainForm::MainForm(std::shared_ptr<TestRunner> testRunner, QWidget* parent)
         &QPushButton::clicked,
         m_testRunner.get(),
         &TestRunner::stopTestSuite);
+
+    connect(
+        m_testRunner.get(),
+        &TestRunner::message,
+        m_ui->log,
+        &QTextBrowser::append);
 }
 
-MainForm::~MainForm() {}
+MainForm::~MainForm() = default;
 
 } // namespace shakespear

@@ -11,6 +11,13 @@ TestRun::TestRun(const GammaRay::LaunchOptions& options, QObject* parent)
     : QObject(parent), m_launcher(options)
 {
     connect(&m_launcher, &GammaRay::Launcher::started, this, &TestRun::autReady);
+    connect(
+        &m_launcher, &GammaRay::Launcher::finished, this, &TestRun::autStopped);
+    connect(
+        &m_launcher,
+        &GammaRay::Launcher::stdoutMessage,
+        this,
+        &TestRun::message);
 }
 
 void TestRun::run()

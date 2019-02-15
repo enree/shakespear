@@ -43,22 +43,22 @@ msgstr "файл конфигурации"
 msgid "command line"
 msgstr "командная строка"
 
-#: TestRunner.cpp:30
+#: TestRunner.cpp:32
 msgid "Application under test"
 msgstr "Приложения для тестирования"
 
-#: TestRunner.cpp:34
+#: TestRunner.cpp:36
 msgid "Probe abi"
 msgstr "БИП"
 
-#: TestRunner.cpp:40
+#: TestRunner.cpp:42
 msgid "Show GammaRay UI on start"
 msgstr "Показывать UI при старте"
 
-#: TestRunner.cpp:82
+#: TestRunner.cpp:85
 msgid "Invalid probe abi: {1}. Available probes are: {2}"
 msgstr "Неверный БИП {1}. Доступный БИПы: {2}"
 
-#: TestRunner.cpp:140
+#: TestRunner.cpp:161
 msgid "Runner options"
 msgstr "Опции запуска"

@@ -53,6 +53,9 @@ public:
 
     ~TestRunner() override;
 
+signals:
+    void message(QString text);
+
 public slots:
     void runTestSuite();
     void stopTestSuite();
