@@ -110,7 +110,7 @@ TestRunner::TestRunner(
     : appkit::Application(argc, argv, manifest, app, std::move(paths))
     , m_networkClient(
           std::make_unique<
-              NetworkClient>(QHostAddress("192.168.2.132"), 56000, 500, 5))
+              NetworkClient>(QHostAddress("192.168.3.26"), 56000, 500, 5))
 {
     connect(m_networkClient.get(), &NetworkClient::connected, this, [this]() {
         emit message(tr("Connected to test server"));

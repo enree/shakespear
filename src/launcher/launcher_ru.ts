@@ -15,6 +15,17 @@
         <source>Shakespear</source>
         <translation>Шейкспир</translation>
     </message>
+    <message>
+        <source>Execute</source>
+        <translation>Выполнить</translation>
+    </message>
+</context>
+<context>
+    <name>shakespear::NetworkClient</name>
+    <message>
+        <source>Can&apos;t connect to host</source>
+        <translation>Невозможно соединиться с хостом</translation>
+    </message>
 </context>
 <context>
     <name>shakespear::TestRunner</name>
@@ -25,6 +36,14 @@
     <message>
         <source>AUT closed</source>
         <translation>Приложение закрыто</translation>
+    </message>
+    <message>
+        <source>Connected to test server</source>
+        <translation>Соединен с тестовым сервером</translation>
+    </message>
+    <message>
+        <source>Disconnected from test server</source>
+        <translation>Отсоединен от тестового сервера</translation>
     </message>
 </context>
 </TS>

@@ -2,13 +2,14 @@
 
 #include "GammarayObjectSelector.h"
 #include "Paths.h"
+#include "shakespear/Translate.h"
 
 #include "coriolis/qt/StringUtils.h"
 
 #include <gammaray/core/probe.h>
 
+#include <QJSEngine>
 #include <QPushButton>
-#include <QScriptEngine>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QTimer>
@@ -19,7 +20,7 @@ namespace shakespear
 
 ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
     : QObject(parent)
-    , m_engine(std::make_unique<QScriptEngine>())
+    , m_engine(std::make_unique<QJSEngine>())
     , m_server(std::make_unique<QTcpServer>())
 {
     // Initialize logger
@@ -49,26 +50,19 @@ void ShakespearPlugin::initialize()
         SHAKESPEAR_INFO("initialized", "Probe");
 
         auto model = probe->objectTreeModel();
-        m_selector = new shakespear::GammarayObjectSelector(*model);
+        m_selector = new shakespear::GammarayObjectSelector(*model, *m_engine);
 
         auto selector = m_engine->newQObject(m_selector);
         m_engine->globalObject().setProperty("Shakespear", selector);
+        //        importModule(":/js/core");
+        evaluate("function findObject(selector) { var object = "
+                 "Shakespear.findObject(selector); return object;}");
 
-        m_server->listen(QHostAddress("192.168.2.132"), 56000);
+        m_server->listen(QHostAddress("192.168.3.26"), 56000);
 
-        m_engine->evaluate(
-            "var lineEdit = Shakespear.findObject('.QLineEdit'); "
-            "lineEdit.text = 'Welcome, JS2';"
-            "Shakespear.findObject('QLabel').setText('New label');");
-
-        try
-        {
-            m_selector->object<QWidget>("#Widget")->move(300, 300);
-            m_selector->object<QPushButton>(".QPushButton")->setText("dsscdc");
-        }
-        catch (const shakespear::exception::LookupError& ex)
-        {
-        }
+        evaluate("var lineEdit = findObject('.QLineEdit'); "
+                 "lineEdit.text = 'Welcome, JS2';"
+                 "Shakespear.findObject('QLabel').setText('New label');");
     }
 }
 
@@ -100,8 +94,36 @@ void ShakespearPlugin::readScript()
     if (m_inputStream.commitTransaction())
     {
         SHAKESPEAR_INFO("received", "Script") << rio::strings::toUtf8(script);
+        evaluate(script);
+    }
+}
 
-        m_engine->evaluate(script);
+void ShakespearPlugin::importModule(const QString& name)
+{
+    QJSValue result = m_engine->importModule(name);
+    if (result.isError())
+    {
+        SHAKESPEAR_ERROR("importModule", "Engine")
+            << rio::strings::toUtf8(result.toString());
+    }
+    else
+    {
+        SHAKESPEAR_INFO("importModule", "Engine") << SHAKESPEAR_TR(
+            "Symbols {1} from {2} imported succesfully",
+            rio::strings::toUtf8(result.toString()),
+            rio::strings::toUtf8(name));
+    }
+}
+
+void ShakespearPlugin::evaluate(const QString& script)
+{
+    auto result = m_engine->evaluate(script);
+    if (result.isError())
+    {
+        SHAKESPEAR_ERROR("evaluate", "Engine") << SHAKESPEAR_TR(
+            "{1}. Line: {2}",
+            rio::strings::toUtf8(result.toString()),
+            rio::strings::toUtf8(result.property("line").toString()));
     }
 }
 

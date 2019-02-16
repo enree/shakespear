@@ -8,7 +8,7 @@
 
 #include <memory>
 
-class QScriptEngine;
+class QJSEngine;
 class QTcpServer;
 
 namespace GammaRay
@@ -40,9 +40,13 @@ private slots:
     void readScript();
 
 private:
+    void importModule(const QString& name);
+    void evaluate(const QString& script);
+
+private:
     // This class is owned by JS engine
     shakespear::GammarayObjectSelector* m_selector;
-    std::unique_ptr<QScriptEngine> m_engine;
+    std::unique_ptr<QJSEngine> m_engine;
 
     QTimer m_startupTimer;
 

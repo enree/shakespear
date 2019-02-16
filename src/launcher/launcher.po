@@ -11,6 +11,18 @@ msgstr ""
 "X-Language: en_US\n"
 "X-Source-Language: C\n"
 
+#: NetworkClient.cpp:74
+msgid "Connecting. {1} of {2}"
+msgstr "Соединение. Попытка. {1} из {2}"
+
+#: NetworkClient.cpp:89
+msgid "Error {1}"
+msgstr "Ошибка {1}"
+
+#: NetworkClient.cpp:91
+msgid "Retry in {1} ms"
+msgstr "Повтор через {1} мс"
+
 #: appkit/Paths.cpp:16
 msgid "Config path: "
 msgstr "Конфигурация: "
@@ -43,22 +55,22 @@ msgstr "файл конфигурации"
 msgid "command line"
 msgstr "командная строка"
 
-#: TestRunner.cpp:35
+#: TestRunner.cpp:37
 msgid "Application under test"
 msgstr "Приложения для тестирования"
 
-#: TestRunner.cpp:39
+#: TestRunner.cpp:41
 msgid "Probe abi"
 msgstr "БИП"
 
-#: TestRunner.cpp:45
+#: TestRunner.cpp:47
 msgid "Show GammaRay UI on start"
 msgstr "Показывать UI при старте"
 
-#: TestRunner.cpp:88
+#: TestRunner.cpp:90
 msgid "Invalid probe abi: {1}. Available probes are: {2}"
 msgstr "Неверный БИП {1}. Доступный БИПы: {2}"
 
-#: TestRunner.cpp:174
+#: TestRunner.cpp:183
 msgid "Runner options"
 msgstr "Опции запуска"
