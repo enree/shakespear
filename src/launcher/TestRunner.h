@@ -15,6 +15,8 @@ namespace shakespear
 
 using rio::config::ConfigParser;
 
+class NetworkClient;
+
 /**
  * Test runner configuration
  */
@@ -59,6 +61,7 @@ signals:
 public slots:
     void runTestSuite();
     void stopTestSuite();
+    void runTestCase(const QString& testCase);
 
 private:
     void addSpecificOptions(rio::config::ConfigParser& configParser) override;
@@ -66,6 +69,7 @@ private:
 private:
     TestRunnerConfig m_config;
     QPointer<TestRun> m_testRun;
+    std::unique_ptr<NetworkClient> m_networkClient;
 };
 
 } // namespace shakespear

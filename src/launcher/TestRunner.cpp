@@ -1,5 +1,7 @@
 #include "TestRunner.h"
 
+#include "NetworkClient.h"
+
 #include "shakespear/Log.h"
 #include "shakespear/Translate.h"
 
@@ -11,6 +13,9 @@
 
 #include <gammaray/launcher/probeabi.h>
 #include <gammaray/launcher/probefinder.h>
+
+#include <QHostAddress>
+#include <QTcpSocket>
 
 namespace shakespear
 {
@@ -103,7 +108,17 @@ TestRunner::TestRunner(
     QCoreApplication* app,
     appkit::Paths paths)
     : appkit::Application(argc, argv, manifest, app, std::move(paths))
+    , m_networkClient(
+          std::make_unique<
+              NetworkClient>(QHostAddress("192.168.2.132"), 56000, 500, 5))
 {
+    connect(m_networkClient.get(), &NetworkClient::connected, this, [this]() {
+        emit message(tr("Connected to test server"));
+    });
+
+    connect(m_networkClient.get(), &NetworkClient::disconnected, this, [this]() {
+        emit message(tr("Disconnected from test server"));
+    });
 }
 
 TestRunner::~TestRunner()
@@ -123,6 +138,7 @@ void TestRunner::runTestSuite()
                 emit message(
                     tr("AUT %1 ready")
                         .arg(m_config.options().launchArguments().join(" ")));
+                m_networkClient->connectToHost();
             });
 
             connect(m_testRun, &TestRun::autStopped, this, [this]() {
@@ -151,7 +167,13 @@ void TestRunner::stopTestSuite()
     if (m_testRun)
     {
         m_testRun->interrupt();
+        m_networkClient->disconnectFromHost();
     }
+}
+
+void TestRunner::runTestCase(const QString& testCase)
+{
+    m_networkClient->send(testCase);
 }
 
 void TestRunner::addSpecificOptions(rio::config::ConfigParser& configParser)
