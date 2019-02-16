@@ -1,5 +1,0 @@
-{
-    "id": "shape_injector",
-    "name": "Shape Injector",
-    "types": [ "QWidget" ]
-}

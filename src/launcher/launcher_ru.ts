@@ -4,16 +4,16 @@
 <context>
     <name>MainForm</name>
     <message>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
-    <message>
         <source>Run</source>
         <translation>Запустить</translation>
     </message>
     <message>
         <source>Stop</source>
         <translation>Остановить</translation>
+    </message>
+    <message>
+        <source>Shakespear</source>
+        <translation>Шейкспир</translation>
     </message>
 </context>
 <context>

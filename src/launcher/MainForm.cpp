@@ -3,6 +3,7 @@
 #include "TestRunner.h"
 #include "ui_MainForm.h"
 
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTextBrowser>
 
@@ -33,6 +34,11 @@ MainForm::MainForm(std::shared_ptr<TestRunner> testRunner, QWidget* parent)
         &TestRunner::message,
         m_ui->log,
         &QTextBrowser::append);
+
+    connect(m_ui->execute, &QPushButton::clicked, m_testRunner.get(), [this]() {
+        const QString script = m_ui->scriptEditor->toPlainText();
+        m_testRunner->runTestCase(script);
+    });
 }
 
 MainForm::~MainForm() = default;
