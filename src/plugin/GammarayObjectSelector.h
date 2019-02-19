@@ -5,6 +5,7 @@
 #include <QObject>
 
 class QAbstractItemModel;
+class QJSEngine;
 
 namespace shakespear
 {
@@ -12,9 +13,13 @@ namespace shakespear
 class GammarayObjectSelector : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString lastError READ lastError)
 public:
     GammarayObjectSelector(
-        QAbstractItemModel& model, QObject* parent = nullptr);
+        QAbstractItemModel& model,
+        QJSEngine& engine,
+        QObject* parent = nullptr);
 
     /**
       Find object from AUT by selector
@@ -22,22 +27,15 @@ public:
     Q_INVOKABLE QObject* findObject(const QString& selector);
 
     /**
-      Find object from AUT by selector, cast to T*. Throw if either no object is
-      found or no cast performed
-    */
-    template <typename T>
-    T* object(const QString& selector)
-    {
-        T* o = qobject_cast<T*>(findObject(selector));
-        if (o == nullptr)
-        {
-            BOOST_THROW_EXCEPTION(exception::ObjectNotFound());
-        }
-        return o;
-    }
+      Return last error in selection objects
+      */
+    Q_INVOKABLE QString lastError() const;
 
 private:
     QAbstractItemModel& m_model;
+    QString m_lastError;
+
+    QJSEngine& m_engine;
 };
 
 } // namespace shakespear

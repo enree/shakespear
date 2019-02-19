@@ -3,11 +3,13 @@ item(shakespear_plugin)
 set(CONFIG_PATH ${PROBE_PLUGIN_INSTALL_DIR})
 
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 collectSources(SOURCES _src)
+
 generatePaths(paths SRC)
 
-find_package(Qt5Script REQUIRED)
+find_package(Qt5Qml REQUIRED)
 find_package(Qt5Network REQUIRED)
 
 # probe part of the plug-in
@@ -18,5 +20,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/p
 
 target_link_libraries(${PROJECT_NAME}
     gammaray_core shakespear_core shakespear_log
-    Qt5::Widgets Qt5::Script Qt5::Network)
-
+    Qt5::Widgets Qt5::Qml Qt5::Network)
+linkBoost(${PROJECT_NAME} locale)
