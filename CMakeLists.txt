@@ -11,7 +11,12 @@ defineProjectIncludes(${CMAKE_CURRENT_BINARY_DIR})
 
 set(_log_syslog OFF)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/make.cmake)
+
 addModule(coriolis)
+
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/modules/gqtest/gqtest.cmake)
 
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DGSL_THROW_ON_CONTRACT_VIOLATION")
 

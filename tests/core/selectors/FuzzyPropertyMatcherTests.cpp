@@ -1,6 +1,6 @@
 #include "core/selectors/FuzzyPropertyMatcher.h"
 
-#include "gtest/gtest.h"
+#include "gqtest"
 
 #include <QObject>
 #include <QStringList>

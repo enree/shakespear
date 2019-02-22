@@ -1,15 +1,20 @@
 msgid ""
 msgstr ""
-"Project-Id-Version:  1.1\n"
+"Project-Id-Version: 1.1\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en_US\n"
+"X-Source-Language: C\n"
 
-#: ShakespearPlugin.cpp:122
-msgid "Module {1} imported"
-msgstr ""
+#: ShakespearPlugin.cpp:112
+msgid "Symbols {1} from {2} imported succesfully"
+msgstr "Символы {1} из {2} успешно импортированы"
+
+#: ShakespearPlugin.cpp:124
+msgid "{1}. Line: {2}"
+msgstr "{1}. Линия: {2}"

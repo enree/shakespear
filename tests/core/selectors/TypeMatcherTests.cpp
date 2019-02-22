@@ -2,7 +2,7 @@
 
 #include "core/selectors/TypeMatcher.h"
 
-#include "gtest/gtest.h"
+#include "gqtest"
 
 namespace shakespear
 {
