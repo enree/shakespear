@@ -1,6 +1,6 @@
 #include "core/selectors/PropertyMatcher.h"
 
-#include "gtest/gtest.h"
+#include "gqtest"
 
 #include <QObject>
 #include <QSize>

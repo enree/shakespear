@@ -4,8 +4,7 @@
 #include "core/selectors/LookupError.h"
 #include "core/selectors/ObjectsSelector.h"
 
-#include "coriolis/test/Printers.h"
-#include "gtest/gtest.h"
+#include "gqtest"
 
 namespace shakespear
 {
