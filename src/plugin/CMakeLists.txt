@@ -5,7 +5,7 @@ set(CONFIG_PATH ${PROBE_PLUGIN_INSTALL_DIR})
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-collectSources(SOURCES _src)
+sources(_src)
 
 generatePaths(paths SRC)
 
@@ -19,6 +19,6 @@ gammaray_add_plugin(${PROJECT_NAME} JSON metadata/shakespearplugin.json
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/paths)
 
 target_link_libraries(${PROJECT_NAME}
-    gammaray_core shakespear_core shakespear_log
+    gammaray_core shakespear_core appkit_log appkit_translations
     Qt5::Widgets Qt5::Qml Qt5::Network)
 linkBoost(${PROJECT_NAME} locale)

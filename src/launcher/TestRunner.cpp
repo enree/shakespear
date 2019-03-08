@@ -1,15 +1,12 @@
 #include "TestRunner.h"
 
-#include "NetworkClient.h"
-
-#include "shakespear/Log.h"
 #include "shakespear/Translate.h"
 
 #include "InvalidRunOptions.h"
-#include "coriolis/qt/StringUtils.h"
-#include "coriolis/qt/streamSupport.h"
+#include "NetworkClient.h"
 
 #include "gsl/gsl_assert"
+#include "log/Log.h"
 
 #include <gammaray/launcher/probeabi.h>
 #include <gammaray/launcher/probefinder.h>
@@ -22,8 +19,6 @@ namespace shakespear
 
 namespace
 {
-
-using namespace rio;
 
 ConfigParser createTestRunnerConfigParser(TestRunnerConfig& config)
 {
@@ -86,10 +81,9 @@ void TestRunnerConfig::setAbi(const QString& abiString)
                        .arg(availableAbi.id(), availableAbi.displayString());
         }
 
-        SHAKESPEAR_FATAL("Config", "abi") << SHAKESPEAR_TR(
-            "Invalid probe abi: {1}. Available probes are: {2}",
-            abiString,
-            strings::toUtf8(availableProbes.join(", ")));
+        LOG_FATAL << QObject::tr(
+                         "Invalid probe abi: %1. Available probes are: %2")
+                         .arg(abiString, availableProbes.join(", "));
 
         BOOST_THROW_EXCEPTION(exception::InvalidAbi(abiString));
     }
@@ -104,13 +98,13 @@ void TestRunnerConfig::setAut(const QString& aut)
 TestRunner::TestRunner(
     int argc,
     char** argv,
-    const rio::app::AppManifest& manifest,
+    const appkit::AppManifest& manifest,
     QCoreApplication* app,
     appkit::Paths paths)
     : appkit::Application(argc, argv, manifest, app, std::move(paths))
     , m_networkClient(
           std::make_unique<
-              NetworkClient>(QHostAddress("192.168.3.26"), 56000, 500, 5))
+              NetworkClient>(QHostAddress("192.168.1.19"), 56000, 500, 5))
 {
     connect(m_networkClient.get(), &NetworkClient::connected, this, [this]() {
         emit message(tr("Connected to test server"));
@@ -155,9 +149,9 @@ void TestRunner::runTestSuite()
 
             m_testRun->run();
         }
-        catch (const shakespear::exception::InvalidRunOptions& ex)
+        catch (const exception::InvalidRunOptions& ex)
         {
-            SHAKESPEAR_ERROR("Application", "start") << ex.what();
+            LOG_ERROR << tr("Application failed to start. %1").arg(ex.what());
         }
     }
 }
@@ -176,7 +170,7 @@ void TestRunner::runTestCase(const QString& testCase)
     m_networkClient->send(testCase);
 }
 
-void TestRunner::addSpecificOptions(rio::config::ConfigParser& configParser)
+void TestRunner::addSpecificOptions(ConfigParser& configParser)
 {
     configParser.addSubtreeOption(
         "runner",

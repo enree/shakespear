@@ -1,18 +1,15 @@
 #pragma once
 
-#include "coriolis/exception/General.h"
-#include "coriolis/exception/KeyInfo.h"
-#include "coriolis/qt/streamSupport.h"
+#include "exception/General.h"
+#include "exception/KeyInfo.h"
+#include "qt/Strings.h"
 
 #include <QString>
-
-namespace shakespear
-{
 
 namespace exception
 {
 
-class InvalidRunOptions : public rio::exception::General
+class InvalidRunOptions : public General
 {
 };
 
@@ -21,10 +18,8 @@ class InvalidAbi : public InvalidRunOptions
 public:
     explicit InvalidAbi(const QString& abi)
     {
-        (*this) << rio::exception::toKeyInfo(abi);
+        (*this) << toKeyInfo(abi);
     }
 };
 
 } // namespace exception
-
-} // namespace shakespear

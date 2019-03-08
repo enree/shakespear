@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "coriolis/app/AppManifest.h"
+#include "app/AppManifest.h"
 
 #include <iostream>
 #include <string>
@@ -18,14 +18,11 @@
 namespace shakespear
 {
 
-namespace appkit
-{
-
 /**
  * This class contains application descriptions
  * One should inherit this class to provide additional agent information
  */
-class AppManifest : public rio::app::AppManifest
+class Manifest : public appkit::AppManifest
 {
 public:
     std::string id() const override;
@@ -34,16 +31,9 @@ public:
     std::string organization() const override;
 };
 
-} // namespace appkit
+/**
+ * Return Application manifest.
+ */
+const appkit::AppManifest& manifest();
 
 } // namespace shakespear
-
-namespace rio
-{
-
-/**
- * Return ruberoid Application manifest.
- */
-const app::AppManifest& manifest();
-
-} // namespace rio

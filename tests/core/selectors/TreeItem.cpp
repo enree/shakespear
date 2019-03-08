@@ -8,12 +8,10 @@
  *
  * $Id: $
  *
-**/
+ **/
 
 #include "TreeItem.h"
 #include "TreeModel.h"
-
-#include "utils/AsConst.h"
 
 namespace rio
 {
@@ -23,12 +21,14 @@ namespace models
 
 /**
  * Helper class. Call beginInsertRows/endInsertRows if model is not NULL
- * These classes SHALL NOT be in anonimous namespace because they are friends of TreeModel
+ * These classes SHALL NOT be in anonimous namespace because they are friends of
+ * TreeModel
  */
 class InsertRowsGuard
 {
 public:
-    InsertRowsGuard(TreeModel* model, const QModelIndex& parent, int from, int to)
+    InsertRowsGuard(
+        TreeModel* model, const QModelIndex& parent, int from, int to)
         : m_model(model)
     {
         if (m_model != nullptr)
@@ -55,7 +55,8 @@ private:
 class RemoveRowsGuard
 {
 public:
-    RemoveRowsGuard(TreeModel* model, const QModelIndex& parent, int from, int to)
+    RemoveRowsGuard(
+        TreeModel* model, const QModelIndex& parent, int from, int to)
         : m_model(model)
     {
         if (m_model != nullptr)
@@ -157,11 +158,12 @@ void TreeItem::update()
     if (TreeModel* itemModel = model())
     {
         QModelIndex idx = index();
-        emit itemModel->dataChanged(idx.sibling(idx.row(), 0),
+        emit itemModel->dataChanged(
+            idx.sibling(idx.row(), 0),
             idx.sibling(idx.row(), itemModel->columnCount() - 1));
     }
 
-    for (auto child: utils::asConst(m_children))
+    for (auto child: qAsConst(m_children))
     {
         child->update();
     }
@@ -172,8 +174,8 @@ void TreeItem::updateColumn(int column)
     if (TreeModel* itemModel = model())
     {
         QModelIndex idx = index();
-        emit itemModel->dataChanged(idx.sibling(idx.row(), column),
-                             idx.sibling(idx.row(), column));
+        emit itemModel->dataChanged(
+            idx.sibling(idx.row(), column), idx.sibling(idx.row(), column));
     }
 }
 
@@ -181,7 +183,8 @@ QModelIndex TreeItem::index() const
 {
     TreeModel* itemModel = model();
     return itemModel != nullptr
-        ? itemModel->indexForItem(const_cast<TreeItem*>(this)) : QModelIndex(); // NOLINT
+               ? itemModel->indexForItem(const_cast<TreeItem*>(this))
+               : QModelIndex(); // NOLINT
 }
 
 bool TreeItem::canFetchMore() const
@@ -227,7 +230,7 @@ void TreeItem::insertChild(int row, TreeItem* item)
 
 void TreeItem::insertChildren(int row, const QList<TreeItem*>& items)
 {
-    if(items.isEmpty())
+    if (items.isEmpty())
     {
         return;
     }
@@ -242,7 +245,6 @@ void TreeItem::insertChildren(int row, const QList<TreeItem*>& items)
             item->setParent(this);
             it = m_children.insert(it, item) + 1;
         }
-
     }
 }
 
@@ -307,6 +309,6 @@ void TreeItem::clear()
     m_children.clear();
 }
 
-} // models
+} // namespace models
 
-} // rio
+} // namespace rio

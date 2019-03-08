@@ -1,6 +1,6 @@
 project(shakespear_core_test)
 
-gqtest(${PROJECT_NAME}
+gtest(${PROJECT_NAME}
     GLOBBING "*"
     RECURSIVE true
     QT Core

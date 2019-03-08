@@ -1,7 +1,8 @@
 #include "NetworkClient.h"
 
-#include "shakespear/Log.h"
-#include "shakespear/Translate.h"
+#include "log/Log.h"
+
+#include "qt/Strings.h"
 
 #include <QDataStream>
 #include <QTcpSocket>
@@ -70,8 +71,8 @@ void NetworkClient::tryToConnect()
 {
     if (m_attempt < m_maxAttempts)
     {
-        SHAKESPEAR_INFO("connect", "Network client") << SHAKESPEAR_TR(
-            "Connecting. {1} of {2}", (m_attempt + 1), m_maxAttempts);
+        LOG_INFO
+            << tr("Connecting. %1 of %2").arg(m_attempt + 1, m_maxAttempts);
 
         m_timer.stop();
         m_socket->connectToHost(m_address, m_port);
@@ -85,10 +86,8 @@ void NetworkClient::tryToConnect()
 
 void NetworkClient::connectionError(QAbstractSocket::SocketError error)
 {
-    SHAKESPEAR_INFO("connect", "Network client")
-        << SHAKESPEAR_TR("Error {1}", error);
-    SHAKESPEAR_INFO("connect", "Network client")
-        << SHAKESPEAR_TR("Retry in {1} ms", m_retryTimeout);
+    LOG_INFO << tr("Error connecting %1").arg(error);
+    LOG_INFO << tr("Retry in %1 ms").arg(m_retryTimeout);
 
     m_timer.start(m_retryTimeout);
 }

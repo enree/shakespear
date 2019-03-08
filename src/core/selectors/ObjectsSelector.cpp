@@ -28,7 +28,7 @@ ObjectsSelector::ObjectsSelector(
 
     if (m_matchers.empty() || capturedString != selector)
     {
-        BOOST_THROW_EXCEPTION(exception::InvalidSelector(selector));
+        BOOST_THROW_EXCEPTION(::exception::InvalidSelector(selector));
     }
 }
 

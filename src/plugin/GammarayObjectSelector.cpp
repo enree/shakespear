@@ -1,6 +1,6 @@
 #include "GammarayObjectSelector.h"
 
-#include "shakespear/Log.h"
+#include "log/Log.h"
 
 #include "core/selectors/ObjectsSelector.h"
 

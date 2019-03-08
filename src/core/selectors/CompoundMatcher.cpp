@@ -20,7 +20,7 @@ namespace shakespear
 namespace
 {
 
-class DuplicateUniqueMatcher : public rio::exception::General
+class DuplicateUniqueMatcher : public exception::General
 {
 };
 

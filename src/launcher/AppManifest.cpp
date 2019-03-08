@@ -12,49 +12,37 @@
 
 #include "shakespear/Translate.h"
 
-#include "coriolis/qt/StringUtils.h"
+#include "qt/Strings.h"
 
 #include <QCoreApplication>
 
 namespace shakespear
 {
 
-namespace appkit
-{
-
-using namespace rio;
-
-std::string AppManifest::id() const
+std::string Manifest::id() const
 {
     return "shakespear";
 }
 
-std::string AppManifest::name() const
+std::string Manifest::name() const
 {
     return SHAKESPEAR_TR("'Shakespear' project");
 }
 
-std::string AppManifest::description() const
+std::string Manifest::description() const
 {
     return SHAKESPEAR_TR("Automated Qt-GUI test tool");
 }
 
-std::string AppManifest::organization() const
+std::string Manifest::organization() const
 {
     return strings::toUtf8(QCoreApplication::organizationName());
 }
 
-} // namespace appkit
-
-} // namespace shakespear
-
-namespace rio
+const appkit::AppManifest& manifest()
 {
-
-const app::AppManifest& manifest()
-{
-    static const shakespear::appkit::AppManifest appManifest;
+    static const Manifest appManifest;
     return appManifest;
 }
 
-} // namespace rio
+} // namespace shakespear

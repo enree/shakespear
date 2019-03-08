@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shakespear/Log.h"
+#include "log/Log.h"
 
 #include <QDataStream>
 #include <QObject>
@@ -51,7 +51,7 @@ private:
     QTimer m_startupTimer;
 
     std::unique_ptr<QTcpServer> m_server;
-    std::unique_ptr<rio::logger::Log> m_logger;
+    std::unique_ptr<appkit::logger::Log> m_logger;
 
     QDataStream m_inputStream;
 };
