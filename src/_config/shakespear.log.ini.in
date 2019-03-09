@@ -1,0 +1,32 @@
+# Comments are allowed. Comment line begins with the '#' character
+# and spans until the end of the line.
+
+# Logging core settings section. May be omitted if no parameters specified within it.
+[Core]
+# Disable logging at all
+DisableLogging=false
+
+# Sink settings sections
+[Sinks.AllLoggersConsole]
+
+Filter="%Severity% >= DEBUG"
+
+# Sink destination type
+Destination=Console
+
+# Formatter string. Optional, by default only log record message text is written.
+Format="<%Severity%> [%TimeStamp(format=\"%a %b %d %H:%M:%S %Y\")%]: %Message%"
+
+
+# Sink settings sections
+[Sinks.AllLoggersFile]
+
+Filter="%Severity% >= DEBUG"
+
+# Sink destination type
+Destination=TextFile
+FileName="@LOG_PATH@/app.log"
+AutoFlush=true
+
+# Formatter string. Optional, by default only log record message text is written.
+Format="<%Severity%> [%TimeStamp(format=\"%a %b %d %H:%M:%S %Y\")%]: %Message%"

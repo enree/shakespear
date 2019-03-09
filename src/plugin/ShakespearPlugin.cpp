@@ -5,6 +5,7 @@
 #include "shakespear/Translate.h"
 
 #include "qt/Strings.h"
+#include "qt/TranslationInstaller.h"
 
 #include <gammaray/core/probe.h>
 
@@ -14,6 +15,8 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QWidget>
+
+#include <boost/algorithm/string/join.hpp>
 
 namespace shakespear
 {

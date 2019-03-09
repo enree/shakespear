@@ -25,7 +25,7 @@ Filter="%Severity% >= DEBUG"
 
 # Sink destination type
 Destination=TextFile
-FileName="~/.shakespear/logs/app.log"
+FileName="@LOG_PATH@/plugin.log"
 AutoFlush=true
 
 # Formatter string. Optional, by default only log record message text is written.

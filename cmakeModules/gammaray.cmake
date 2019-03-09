@@ -23,11 +23,6 @@ ExternalProject_Add(gammaray_external
     -DCMAKE_INSTALL_PREFIX=${GAMMARAY_INSTALL_PATH}
 )
 
-set_target_properties(gammaray_external
-    PROPERTIES
-    GAMMARAY_INSTALL_DIR "${GAMMARAY_SRC}/googletest/include"
-    GAMMARAY_PLUGINS_DIR "${GAMMARAY_BIN}/lib")
-
 set (CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${GAMMARAY_INSTALL_PATH}/lib64/cmake")
 
 include(FeatureSummary)

@@ -22,3 +22,9 @@ target_link_libraries(${PROJECT_NAME}
     gammaray_core shakespear_core appkit_log appkit_translations
     Qt5::Widgets Qt5::Qml Qt5::Network)
 linkBoost(${PROJECT_NAME} locale)
+
+# Create logger config
+configure_file("_config/shakespear.log.ini.in"
+    "${GENERATED_CONFIG}/${PROJECT_NAME}/shakespear.log.ini" @ONLY)
+
+installProjectConfiguration(${PROJECT_NAME} ${CONFIG_PATH} ${PROJECT_NAME})
