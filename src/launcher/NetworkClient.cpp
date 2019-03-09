@@ -72,7 +72,7 @@ void NetworkClient::tryToConnect()
     if (m_attempt < m_maxAttempts)
     {
         LOG_INFO
-            << tr("Connecting. %1 of %2").arg(m_attempt + 1, m_maxAttempts);
+            << tr("Connecting. %1 of %2").arg(m_attempt + 1).arg(m_maxAttempts);
 
         m_timer.stop();
         m_socket->connectToHost(m_address, m_port);

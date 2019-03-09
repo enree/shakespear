@@ -1,8 +1,7 @@
 project(shakespear)
 
-set (TRANSLATION_DOMAIN "shakespear")
-
 # Add translation
+set (TRANSLATION_DOMAIN "shakespear")
 generateTranslationMacros(SHAKESPEAR
     ${PROJECT_GENERATED_INCLUDES}/${PROJECT_NAME} TR_DOMAIN ${TRANSLATION_DOMAIN})
 
@@ -11,8 +10,7 @@ add_subdirectory(launcher)
 add_subdirectory(plugin)
 add_subdirectory(app)
 
-set(TRANSLATION_COMPONENT shakespear)
-compileTranslations()
+compileTranslations(${TRANSLATION_DOMAIN})
 
 # Create agent config
 configure_file("config/aut.conf.in"
