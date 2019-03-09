@@ -9,25 +9,26 @@ if (NOT DEFINED GAMMARAY_GIT)
     set(GAMMARAY_GIT "https://github.com/KDAB/GammaRay.git")
 endif()
 
+set(GAMMARAY_INSTALL_PATH ${INSTALL_PREFIX}/gammaray)
+
 ExternalProject_Add(gammaray_external
   GIT_REPOSITORY    ${GAMMARAY_GIT}
   GIT_TAG           master
   SOURCE_DIR        "${GAMMARAY_SRC}"
   BINARY_DIR        "${GAMMARAY_BIN}"
-  CONFIGURE_COMMAND ${CMAKE_COMMAND} -S <SOURCE_DIR> -B <BINARY_DIR>
-  BUILD_COMMAND ${CMAKE_COMMAND} -E echo "Starting GammaRay build"
-  COMMAND       ${CMAKE_MAKE_PROGRAM} -j8
-  COMMAND       ${CMAKE_COMMAND} -E echo "GammaRay build complete"
-
-  INSTALL_COMMAND   ""
-  TEST_COMMAND      ""
+  STEP_TARGETS build install
   UPDATE_DISCONNECTED true
+
+  CMAKE_ARGS
+    -DCMAKE_INSTALL_PREFIX=${GAMMARAY_INSTALL_PATH}
 )
 
 set_target_properties(gammaray_external
     PROPERTIES
     GAMMARAY_INSTALL_DIR "${GAMMARAY_SRC}/googletest/include"
     GAMMARAY_PLUGINS_DIR "${GAMMARAY_BIN}/lib")
+
+set (CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${GAMMARAY_INSTALL_PATH}/lib64/cmake")
 
 include(FeatureSummary)
 
@@ -39,3 +40,4 @@ set_package_properties(GammaRay PROPERTIES
   PURPOSE "Needed to build Shakespear project."
 )
 
+set(PROBE_PLUGIN_INSTALL_DIR "${GAMMARAY_INSTALL_PATH}/${GAMMARAY_PROBE_PLUGIN_INSTALL_DIR}")
