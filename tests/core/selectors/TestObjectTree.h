@@ -17,7 +17,7 @@ namespace shakespear
  *              shared]
  *      QAlternativeSubSubclass#edit3[text=edit]
  */
-class TestObjectTree : public rio::models::TreeModel
+class TestObjectTree : public models::TreeModel
 {
     Q_OBJECT
 public:

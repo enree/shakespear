@@ -1,7 +1,11 @@
 #include "app/ReturnCode.h"
 
-#include "launcher/MainForm.h"
 #include "launcher/TestRunner.h"
+#include "ui/MainForm.h"
+
+#include "ui/LogWidget.h"
+#include "ui/logging/TextEditSinkHubFactory.h"
+#include "ui/logging/TextEditSinkWidget.h"
 
 #include "log/Log.h"
 #include "shakespear/Paths.h"
@@ -10,6 +14,23 @@
 
 using namespace shakespear;
 using namespace GammaRay;
+
+namespace
+{
+
+QWidget* createLogWidgetHub()
+{
+    auto widget = new ui::LogWidget;
+
+    auto hubFactory
+        = boost::make_shared<logger::TextEditSinkHubFactory>(widget);
+    logger::initTextEditSinkHubFactory(hubFactory);
+    widget->setWindowTitle(QObject::tr("Application output"));
+
+    return widget;
+}
+
+} // namespace
 
 int main(int argc, char** argv)
 {
@@ -25,6 +46,9 @@ int main(int argc, char** argv)
     QApplication application(argc, argv);
     std::shared_ptr<TestRunner> runner;
 
+    // WARNING: logWidget SHOULD be created before TestRunner
+    auto logWidget = createLogWidgetHub();
+
     try
     {
         runner = std::make_shared<
@@ -36,7 +60,7 @@ int main(int argc, char** argv)
         return appkit::INITIALIZATION_ERROR;
     }
 
-    MainForm mainForm(runner);
+    MainForm mainForm(runner, logWidget);
     mainForm.show();
 
     return runner->run();

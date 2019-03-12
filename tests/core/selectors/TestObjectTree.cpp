@@ -7,7 +7,7 @@
 namespace shakespear
 {
 
-class ObjectItem : public rio::models::TreeItem
+class ObjectItem : public models::TreeItem
 {
 public:
     explicit ObjectItem(gsl::not_null<QObject*> object) : m_object(object) {}

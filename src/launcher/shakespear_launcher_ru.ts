@@ -2,25 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU" sourcelanguage="ru_RU">
 <context>
-    <name>MainForm</name>
-    <message>
-        <source>Run</source>
-        <translation>Запустить</translation>
-    </message>
-    <message>
-        <source>Stop</source>
-        <translation>Остановить</translation>
-    </message>
-    <message>
-        <source>Shakespear</source>
-        <translation>Шейкспир</translation>
-    </message>
-    <message>
-        <source>Execute</source>
-        <translation>Выполнить</translation>
-    </message>
-</context>
-<context>
     <name>QObject</name>
     <message>
         <source>Invalid probe abi: %1. Available probes are: %2</source>

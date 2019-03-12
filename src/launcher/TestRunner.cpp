@@ -121,7 +121,7 @@ TestRunner::~TestRunner()
 
 void TestRunner::runTestSuite()
 {
-    if (!m_testRun)
+    if (m_testRun == nullptr)
     {
         try
         {
@@ -157,7 +157,7 @@ void TestRunner::runTestSuite()
 
 void TestRunner::stopTestSuite()
 {
-    if (m_testRun)
+    if (m_testRun != nullptr)
     {
         m_testRun->interrupt();
         m_networkClient->disconnectFromHost();

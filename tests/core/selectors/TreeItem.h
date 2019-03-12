@@ -2,20 +2,13 @@
  * @file
  * @brief CommonTreeItem
  *
- * @ingroup RIO_CORIOLIS
- *
- * @copyright  (C) 2015 PKB RIO Design Department
- *
  * $Id: $
  *
-**/
+ **/
 
 #pragma once
 
 #include <QAbstractItemModel>
-
-namespace rio
-{
 
 namespace models
 {
@@ -81,7 +74,8 @@ public:
     virtual QVariant data(int column, int role) const;
 
     /**
-     * Sets the item's data for the given role and column to the specified value.
+     * Sets the item's data for the given role and column to the specified
+     * value.
      */
     virtual bool setData(int column, const QVariant& data, int role);
 
@@ -96,7 +90,8 @@ public:
     void setFlags(Qt::ItemFlags flags);
 
     /**
-     * Emit signal AbstractTreeModel::dataChanged for current index and update all children.
+     * Emit signal AbstractTreeModel::dataChanged for current index and update
+     * all children.
      */
     virtual void update();
 
@@ -111,15 +106,15 @@ public:
     QModelIndex index() const;
 
     /**
-     * Returns true if there is more data available for parent; otherwise returns false.
-     * The default implementation always returns false.
+     * Returns true if there is more data available for parent; otherwise
+     * returns false. The default implementation always returns false.
      */
     virtual bool canFetchMore() const;
 
     /**
-     * Fetch any available data for the items with the parent specified by the parent index.
-     * Reimplement this if you are populating your model incrementally.
-     * The default implementation does nothing.
+     * Fetch any available data for the items with the parent specified by the
+     * parent index. Reimplement this if you are populating your model
+     * incrementally. The default implementation does nothing.
      */
     virtual void fetchMore();
 
@@ -189,6 +184,4 @@ private:
     QList<TreeItem*> m_children;
 };
 
-} // models
-
-} // rio
+} // namespace models

@@ -2,19 +2,12 @@
  * @file
  * @brief tree item
  *
- * @ingroup RIO_CORIOLIS
- *
- * @copyright  (C) 2015 PKB RIO Design Department
- *
  * $Id: $
  *
  **/
 
 #include "TreeItem.h"
 #include "TreeModel.h"
-
-namespace rio
-{
 
 namespace models
 {
@@ -310,5 +303,3 @@ void TreeItem::clear()
 }
 
 } // namespace models
-
-} // namespace rio

@@ -30,3 +30,10 @@ AutoFlush=true
 
 # Formatter string. Optional, by default only log record message text is written.
 Format="<%Severity%> [%TimeStamp(format=\"%a %b %d %H:%M:%S %Y\")%]: %Message%"
+
+[Sinks.TextEditHub]
+TabTitle="Testing"
+Destination=TextEditHub
+Filter="%Severity% >= INFO"
+Format="[%TimeStamp(format=\"%Y.%m.%d %H:%M:%S\")%]: %Message%"
+Decorator="FATAL:<font color=\"red\"><pre>%1</pre></font>|ERROR:<font color=\"red\"><pre>%1</pre></font>|WARNING:<font color=\"#ec9b0f\">%1</font>|DEBUG:<i><font color=\"grey\"><pre>%1</pre></font></i>"

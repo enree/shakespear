@@ -1,21 +1,28 @@
 #include "MainForm.h"
 
-#include "TestRunner.h"
+#include "launcher/TestRunner.h"
 #include "ui_MainForm.h"
 
+#include "qt/Strings.h"
+
+#include <QLayout>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTextBrowser>
 
+#include <boost/make_shared.hpp>
+
 namespace shakespear
 {
 
-MainForm::MainForm(std::shared_ptr<TestRunner> testRunner, QWidget* parent)
+MainForm::MainForm(
+    std::shared_ptr<TestRunner> testRunner, QWidget* logHub, QWidget* parent)
     : QWidget(parent)
     , m_ui(new Ui::MainForm)
     , m_testRunner(std::move(testRunner))
 {
     m_ui->setupUi(this);
+    layout()->addWidget(logHub);
 
     connect(
         m_ui->run,
@@ -32,8 +39,8 @@ MainForm::MainForm(std::shared_ptr<TestRunner> testRunner, QWidget* parent)
     connect(
         m_testRunner.get(),
         &TestRunner::message,
-        m_ui->log,
-        &QTextBrowser::append);
+        this,
+        [](const QString& message) { LOG_INFO << message; });
 
     connect(m_ui->execute, &QPushButton::clicked, m_testRunner.get(), [this]() {
         const QString script = m_ui->scriptEditor->toPlainText();

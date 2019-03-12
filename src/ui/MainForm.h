@@ -20,7 +20,9 @@ class MainForm : public QWidget
 
 public:
     explicit MainForm(
-        std::shared_ptr<TestRunner> testRunner, QWidget* parent = nullptr);
+        std::shared_ptr<TestRunner> testRunner,
+        QWidget* logHub,
+        QWidget* parent = nullptr);
     ~MainForm();
 
 private:
