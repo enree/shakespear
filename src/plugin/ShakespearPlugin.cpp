@@ -61,7 +61,7 @@ void ShakespearPlugin::initialize()
         evaluate("function findObject(selector) { var object = "
                  "Shakespear.findObject(selector); return object;}");
 
-        m_server->listen(QHostAddress("192.168.1.19"), 56000);
+        m_server->listen(QHostAddress("127.0.0.1"), 56000);
 
         evaluate("var lineEdit = findObject('.QLineEdit'); "
                  "lineEdit.text = 'Welcome, JS2';"

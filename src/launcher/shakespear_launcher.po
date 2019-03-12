@@ -23,7 +23,7 @@ msgstr "БИП"
 msgid "Show GammaRay UI on start"
 msgstr "Показывать UI при старте"
 
-#: TestRunner.cpp:177
+#: TestRunner.cpp:176
 msgid "Runner options"
 msgstr "Опции запуска"
 
