@@ -3,6 +3,7 @@
 #include "core/selectors/LookupError.h"
 
 #include <QObject>
+#include <QVariantList>
 
 class QAbstractItemModel;
 class QJSEngine;
@@ -25,6 +26,16 @@ public:
       Find object from AUT by selector
     */
     Q_INVOKABLE QObject* findObject(const QString& selector);
+
+    /**
+      Find first object from AUT by selector
+    */
+    Q_INVOKABLE QObject* findFirstObject(const QString& selector);
+
+    /**
+      Find all objects from AUT by selector
+    */
+    Q_INVOKABLE QVariantList findObjects(const QString& selector);
 
     /**
       Return last error in selection objects
