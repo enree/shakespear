@@ -1,5 +1,5 @@
 <RCC>
     <qresource>
-        <file>clear.png</file>
+        <file alias="clear">clear.png</file>
     </qresource>
 </RCC>

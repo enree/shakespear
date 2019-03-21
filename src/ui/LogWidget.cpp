@@ -17,7 +17,7 @@ LogWidget::LogWidget(QWidget* parent)
 
     auto tbtnClear = new QToolButton(this);
     tbtnClear->setToolTip(tr("Clear"));
-    tbtnClear->setIcon(QIcon(":/gui/clear_icon"));
+    tbtnClear->setIcon(QIcon(":/clear"));
     gridLayout->addWidget(tbtnClear, 0, 0, 1, 1);
 
     gridLayout->addWidget(m_tabWidget, 0, 1, 2, 1);

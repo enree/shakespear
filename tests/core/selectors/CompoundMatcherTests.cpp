@@ -4,6 +4,7 @@
 #include "core/selectors/CompoundMatcher.h"
 #include "core/selectors/InvalidSelector.h"
 #include "core/selectors/ObjectNameMatcher.h"
+#include "core/selectors/ObjectsSelector.h"
 #include "core/selectors/PropertyMatcher.h"
 
 #include "gqtest"
@@ -65,26 +66,40 @@ TEST(CompoundMatcherFromSelectorTest, objectNameMatcher)
 {
     QObject object;
     object.setObjectName("name");
-    EXPECT_TRUE(buildMatcher("#name")->match(object));
+    EXPECT_TRUE(buildMatchers("#name").front().matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, classMatcher)
 {
     QObjectSubSubclass object;
-    EXPECT_TRUE(buildMatcher("shakespear::QObjectSubclass")->match(object));
+    EXPECT_TRUE(buildMatchers("shakespear::QObjectSubclass")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, typeMatcher)
 {
     QObjectSubclass object;
-    EXPECT_TRUE(buildMatcher(".shakespear::QObjectSubclass")->match(object));
+    EXPECT_TRUE(buildMatchers(".shakespear::QObjectSubclass")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, propertyMatcher)
 {
     QObject object;
     object.setProperty("Property", "value");
-    EXPECT_TRUE(buildMatcher(R"([Property="value"])")->match(object));
+    EXPECT_TRUE(
+        buildMatchers(R"([Property="value"])").front().matcher->match(object));
+}
+
+TEST(CompoundMatcherFromSelectorTest, propertyWithSpaceMatcher)
+{
+    QObject object;
+    object.setProperty("Property", "value and space");
+    EXPECT_TRUE(buildMatchers(R"([Property="value and space"])")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, twoPropertiesMatcher)
@@ -92,8 +107,9 @@ TEST(CompoundMatcherFromSelectorTest, twoPropertiesMatcher)
     QObject object;
     object.setProperty("Property1", "value1");
     object.setProperty("Property2", "value2");
-    EXPECT_TRUE(buildMatcher(R"([Property1="value1"][Property2="value2"])")
-                    ->match(object));
+    EXPECT_TRUE(buildMatchers(R"([Property1="value1"][Property2="value2"])")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, fuzzyPropertyMather)
@@ -103,7 +119,9 @@ TEST(CompoundMatcherFromSelectorTest, fuzzyPropertyMather)
         "Property",
         QStringList() << "value1"
                       << "value2");
-    EXPECT_TRUE(buildMatcher(R"([Property~="value1"])")->match(object));
+    EXPECT_TRUE(buildMatchers(R"([Property~="value1"])")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, allFieldsMatcher)
@@ -112,8 +130,15 @@ TEST(CompoundMatcherFromSelectorTest, allFieldsMatcher)
     object.setProperty("Property", "value");
     object.setObjectName("name");
 
-    EXPECT_TRUE(
-        buildMatcher(R"(QObject#name[Property="value"])")->match(object));
+    EXPECT_TRUE(buildMatchers(R"(QObject#name[Property="value"])")
+                    .front()
+                    .matcher->match(object));
+    EXPECT_TRUE(buildMatchers(R"([Property="value"]QObject#name)")
+                    .front()
+                    .matcher->match(object));
+    EXPECT_TRUE(buildMatchers(R"(#name[Property="value"]QObject)")
+                    .front()
+                    .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, allFieldsMatcherDoNotMatch)
@@ -121,44 +146,41 @@ TEST(CompoundMatcherFromSelectorTest, allFieldsMatcherDoNotMatch)
     QObjectSubclass object;
     object.setProperty("Property", "value");
 
-    EXPECT_FALSE(
-        buildMatcher(R"(QObject#name[Property="value"])")->match(object));
+    EXPECT_FALSE(buildMatchers(R"(QObject#name[Property="value"])")
+                     .front()
+                     .matcher->match(object));
 }
 
 TEST(CompoundMatcherFromSelectorTest, invalidSelectors)
 {
     EXPECT_THROW(
-        buildMatcher(R"([property="value")"), exception::InvalidSelector);
+        buildMatchers(R"([property="value")"), exception::InvalidSelector);
 
     EXPECT_THROW(
-        buildMatcher(R"(property="value"])"), exception::InvalidSelector);
+        buildMatchers(R"(property="value"])"), exception::InvalidSelector);
 
     EXPECT_THROW(
-        buildMatcher(R"([property=."value"])"), exception::InvalidSelector);
+        buildMatchers(R"([property=."value"])"), exception::InvalidSelector);
 
     EXPECT_THROW(
-        buildMatcher(R"([property=value])"), exception::InvalidSelector);
+        buildMatchers(R"([property=value])"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(#id#name)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(#id#name)"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(##)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(##)"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(###)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(###)"), exception::InvalidSelector);
 
-    EXPECT_THROW(
-        buildMatcher(R"([property="100"]QLineEdit.QWidget#id)"),
-        exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(.class#)"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(.class#)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(.clas#$)"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(.clas#$)"), exception::InvalidSelector);
-
-    EXPECT_THROW(buildMatcher(R"(namespace::)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(namespace::)"), exception::InvalidSelector);
 
     EXPECT_THROW(
-        buildMatcher(R"(namespace::Widget::)"), exception::InvalidSelector);
+        buildMatchers(R"(namespace::Widget::)"), exception::InvalidSelector);
 
-    EXPECT_THROW(buildMatcher(R"(::)"), exception::InvalidSelector);
+    EXPECT_THROW(buildMatchers(R"(::)"), exception::InvalidSelector);
 }
 
 } // namespace shakespear

@@ -57,13 +57,14 @@ void ShakespearPlugin::initialize()
 
         auto selector = m_engine->newQObject(m_selector);
         m_engine->globalObject().setProperty("Shakespear", selector);
-        //        importModule(":/js/core");
-        evaluate("function findObject(selector) { var object = "
-                 "Shakespear.findObject(selector); return object;}");
+        importModule(":/js/core.mjs");
+        //        evaluate("function findObject(selector) { var object = "
+        //                 "Shakespear.findObject(selector); return object;}");
 
         m_server->listen(QHostAddress("127.0.0.1"), 56000);
 
-        evaluate("var lineEdit = findObject('.QLineEdit'); "
+        evaluate("import {findObject} from :/js/core.mjs"
+                 "var lineEdit = findObject('.QLineEdit'); "
                  "lineEdit.text = 'Welcome, JS2';"
                  "Shakespear.findObject('QLabel').setText('New label');");
     }
@@ -103,15 +104,19 @@ void ShakespearPlugin::readScript()
 
 void ShakespearPlugin::importModule(const QString& name)
 {
-    QJSValue result = m_engine->importModule(name);
-    if (result.isError())
+    QJSValue module = m_engine->importModule(name);
+    QJSValue sumFunction = module.property("findObject");
+    //    QJSValue result = sumFunction.call(args);
+
+    if (sumFunction.isError())
     {
-        LOG_ERROR << tr("Error importing module %2").arg(result.toString());
+        LOG_ERROR
+            << tr("Error importing module %2").arg(sumFunction.toString());
     }
     else
     {
         LOG_INFO << tr("Symbols %1 from %2 imported succesfully")
-                        .arg(result.toString(), name);
+                        .arg(sumFunction.toString(), name);
     }
 }
 

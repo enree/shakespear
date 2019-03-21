@@ -5,7 +5,7 @@ sharedLib(${PROJECT_NAME}
     QT Core
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS appkit_core)
+    DEPENDS appkit_core appkit_log)
 
 lint(${PROJECT_NAME})
 

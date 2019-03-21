@@ -23,4 +23,16 @@ public:
     }
 };
 
+class InvalidMatcher : public exception::General
+{
+};
+
+class DuplicateUniqueMatcher : public InvalidMatcher
+{
+};
+
+class EmptyMatcher : public InvalidMatcher
+{
+};
+
 } // namespace exception

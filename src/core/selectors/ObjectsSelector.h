@@ -13,13 +13,14 @@ class QString;
 namespace shakespear
 {
 
+struct Matcher
+{
+    std::unique_ptr<CompoundMatcher> matcher;
+    bool multilevel;
+};
+
 class ObjectsSelector
 {
-    struct Matcher
-    {
-        std::unique_ptr<CompoundMatcher> matcher;
-        bool multilevel;
-    };
 
 public:
     ObjectsSelector(
@@ -33,9 +34,7 @@ public:
 
 private:
     QModelIndexList findIndices(
-        const QModelIndexList& startIndices,
-        const CompoundMatcher& matcher,
-        bool multilevel) const;
+        const QModelIndexList& startIndices, const Matcher& matcher) const;
 
 private:
     QAbstractItemModel* m_model;
@@ -43,5 +42,7 @@ private:
 
     std::vector<Matcher> m_matchers;
 };
+
+std::vector<Matcher> buildMatchers(const QString& selector);
 
 } // namespace shakespear
