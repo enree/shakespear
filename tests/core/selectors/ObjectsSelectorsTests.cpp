@@ -112,4 +112,26 @@ TEST(ObjectsSelectorTest, invalidSelectors)
         exception::InvalidSelector);
 }
 
+TEST(ObjectsSelectorTest, findFirst)
+{
+    TestObjectTree objectTree;
+
+    ObjectsSelector
+        selector("#root #label", &objectTree, TestObjectTree::QObjectRole);
+
+    auto object = selector.findFirstObject();
+    EXPECT_EQ("label", object->objectName());
+}
+
+TEST(ObjectsSelectorTest, findAll)
+{
+    TestObjectTree objectTree;
+
+    ObjectsSelector
+        selector("#root #label", &objectTree, TestObjectTree::QObjectRole);
+
+    auto objects = selector.findObjects();
+    ASSERT_EQ(2UL, objects.size());
+}
+
 } // namespace shakespear

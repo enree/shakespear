@@ -49,7 +49,8 @@ public:
         m_builders[propertyKey]
             = [](const QString& captured) -> std::unique_ptr<ObjectMatcher> {
             const QRegularExpression propertyRegExp(
-                R"((?<name>\w+)(?<op>~?=)\"(?<value>(\w|\s)+)\")");
+                R"((?<name>\w+)(?<op>~?=)\"(?<value>([а-яА-ЯёЁ.,?!\]\[\<\>]|\w|\s)+)\")",
+                QRegularExpression::UseUnicodePropertiesOption);
             QRegularExpressionMatch propertyMatch
                 = propertyRegExp.match(captured);
 
@@ -130,6 +131,42 @@ QObject* ObjectsSelector::findObject() const
     return indices.at(0).data(m_role).value<QObject*>();
 }
 
+QObject* ObjectsSelector::findFirstObject() const
+{
+    QModelIndexList indices = { {} };
+    for (const auto& matcher: m_matchers)
+    {
+        indices = findIndices(indices, matcher);
+    }
+
+    if (indices.isEmpty())
+    {
+        BOOST_THROW_EXCEPTION(exception::ObjectNotFound());
+    }
+
+    return indices.at(0).data(m_role).value<QObject*>();
+}
+
+std::vector<QObject*> ObjectsSelector::findObjects() const
+{
+    QModelIndexList indices = { {} };
+    for (const auto& matcher: m_matchers)
+    {
+        indices = findIndices(indices, matcher);
+    }
+
+    std::vector<QObject*> objects;
+    objects.reserve(indices.size());
+    std::transform(
+        indices.begin(),
+        indices.end(),
+        std::back_inserter(objects),
+        [this](const QModelIndex& index) {
+            return index.data(m_role).value<QObject*>();
+        });
+    return objects;
+}
+
 QModelIndexList ObjectsSelector::findIndices(
     const QModelIndexList& startIndices, const Matcher& matcher) const
 {
@@ -159,7 +196,9 @@ std::vector<Matcher> buildMatchers(const QString& selector)
     const auto classRegex
         = QStringLiteral(R"((?<%1>\w+(:{2}\w+)*))").arg(classKey);
     const auto propertyRegex
-        = QStringLiteral(R"(\[(?<%1>\w+~?=\"(\w|\s)+\")\])").arg(propertyKey);
+        = QStringLiteral(
+              R"(\[(?<%1>\w+~?=\"([а-яА-ЯёЁ.,?!\]\[\<\>]|\w|\s)+\")\])")
+              .arg(propertyKey);
     const auto typeRegex
         = QStringLiteral(R"(\.(?<%1>\w+(:{2}\w+)*))").arg(typeKey);
     const auto singleLevelRegex
@@ -167,14 +206,16 @@ std::vector<Matcher> buildMatchers(const QString& selector)
     const auto multiLevelRegex
         = QStringLiteral(R"((?<%2>\s))").arg(multiLevelKey);
 
-    const QRegularExpression regExp(QStringLiteral(R"((%1|%2|%3|%4)|%5|%6)")
-                                        .arg(
-                                            classRegex,
-                                            idRegex,
-                                            propertyRegex,
-                                            typeRegex,
-                                            singleLevelRegex,
-                                            multiLevelRegex));
+    const QRegularExpression regExp(
+        QStringLiteral(R"((%1|%2|%3|%4)|%5|%6)")
+            .arg(
+                classRegex,
+                idRegex,
+                propertyRegex,
+                typeRegex,
+                singleLevelRegex,
+                multiLevelRegex),
+        QRegularExpression::UseUnicodePropertiesOption);
 
     QString capturedString;
     QRegularExpressionMatchIterator i = regExp.globalMatch(selector);
@@ -187,7 +228,7 @@ std::vector<Matcher> buildMatchers(const QString& selector)
         while (i.hasNext())
         {
             QRegularExpressionMatch match = i.next();
-            LOG_DEBUG << match.captured();
+            LOG_DEBUG << "Captured: " << match.captured();
             if (!match.captured(multiLevelKey).isEmpty()
                 || !match.captured(singleLevelKey).isEmpty())
             {

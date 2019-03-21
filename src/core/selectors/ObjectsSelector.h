@@ -32,6 +32,16 @@ public:
      */
     QObject* findObject() const;
 
+    /**
+     * Find first object by selector. Throws an exception if no object is found
+     */
+    QObject* findFirstObject() const;
+
+    /**
+     * Find all objects by selector
+     */
+    std::vector<QObject*> findObjects() const;
+
 private:
     QModelIndexList findIndices(
         const QModelIndexList& startIndices, const Matcher& matcher) const;
