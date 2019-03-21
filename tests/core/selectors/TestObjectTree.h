@@ -13,11 +13,11 @@ namespace shakespear
  *          QObjectSubSubclass#label[text=label1]
  *          QAlternativeSubSubclass#edit[text=edit1][classes=own shared]
  *      QObjectSubSubclass#label[text=label2]
- *          QAlternativeSubSubclass#edit2[text=edit][classes=otherown
+ *          QAlternativeSubSubclass#edit2[text=edit2][classes=otherown
  *              shared]
- *      QAlternativeSubSubclass#edit3[text=edit]
+ *      QAlternativeSubSubclass#edit[text="space beyond space"]
  */
-class TestObjectTree : public rio::models::TreeModel
+class TestObjectTree : public models::TreeModel
 {
     Q_OBJECT
 public:

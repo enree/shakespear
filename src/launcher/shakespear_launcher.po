@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.1\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: en_US\n"
+"X-Source-Language: C\n"
+
+#: TestRunner.cpp:32
+msgid "Application under test"
+msgstr "Приложения для тестирования"
+
+#: TestRunner.cpp:36
+msgid "Probe abi"
+msgstr "БИП"
+
+#: TestRunner.cpp:42
+msgid "Show GammaRay UI on start"
+msgstr "Показывать UI при старте"
+
+#: TestRunner.cpp:176
+msgid "Runner options"
+msgstr "Опции запуска"
+
+#: AppManifest.cpp:29
+msgid "'Shakespear' project"
+msgstr "Проект \"Шейкспир\""
+
+#: AppManifest.cpp:34
+msgid "Automated Qt-GUI test tool"
+msgstr "Инструмент для автоматизированного GUI тестирования"

@@ -1,12 +1,12 @@
-[submodule "build"]
-	path = build
-	url = ssh://yurib@gerrit.dev.pkb-rio.com:29418/build
-[submodule "modules/coriolis"]
-	path = modules/coriolis
-	url = ssh://yurib@gerrit.dev.pkb-rio.com:29418/coriolis
 [submodule "cmake"]
 	path = cmake
-	url = git@github.com:enree/cmake.git
+	url = https://github.com/enree/cmake.git
 [submodule "modules/gqtest"]
 	path = modules/gqtest
-	url = git@github.com:enree/gqtest.git
+	url = https://github.com/enree/gqtest.git
+[submodule "modules/appkit"]
+	path = modules/appkit
+	url = https://github.com/enree/appkit.git
+[submodule "modules/gsl"]
+	path = modules/gsl
+	url = https://github.com/enree/gsl.git

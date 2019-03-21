@@ -1,10 +1,10 @@
 #pragma once
 
+#include "AppManifest.h"
 #include "TestRun.h"
 
-#include "appkit/Application.h"
-
-#include "coriolis/config/ConfigParser.h"
+#include "app/Application.h"
+#include "config/ConfigParser.h"
 
 #include "gammaray/launcher/launchoptions.h"
 
@@ -13,7 +13,7 @@
 namespace shakespear
 {
 
-using rio::config::ConfigParser;
+using appkit::config::ConfigParser;
 
 class NetworkClient;
 
@@ -49,7 +49,7 @@ public:
     TestRunner(
         int argc,
         char** argv,
-        const rio::app::AppManifest& manifest,
+        const appkit::AppManifest& manifest,
         QCoreApplication* app,
         appkit::Paths paths);
 
@@ -64,7 +64,7 @@ public slots:
     void runTestCase(const QString& testCase);
 
 private:
-    void addSpecificOptions(rio::config::ConfigParser& configParser) override;
+    void addSpecificOptions(ConfigParser& configParser) override;
 
 private:
     TestRunnerConfig m_config;

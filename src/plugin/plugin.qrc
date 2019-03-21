@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/js">
-        <file alias="core">js/core.js</file>
+        <file>core.mjs</file>
     </qresource>
 </RCC>

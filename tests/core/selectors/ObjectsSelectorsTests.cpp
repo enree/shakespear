@@ -76,6 +76,19 @@ TEST(ObjectsSelectorTest, selectByOneOfProperties)
     EXPECT_EQ("edit2", object->objectName());
 }
 
+TEST(ObjectsSelectorTest, propertyWithSpaceSelector)
+{
+    TestObjectTree objectTree;
+
+    ObjectsSelector selector(
+        "[text=\"space beyond space\"]",
+        &objectTree,
+        TestObjectTree::QObjectRole);
+
+    auto object = selector.findObject();
+    EXPECT_EQ("edit", object->objectName());
+}
+
 TEST(ObjectsSelectorTest, invalidSelectors)
 {
     TestObjectTree objectTree;

@@ -4,7 +4,8 @@
 #include "Paths.h"
 #include "shakespear/Translate.h"
 
-#include "coriolis/qt/StringUtils.h"
+#include "qt/Strings.h"
+#include "qt/TranslationInstaller.h"
 
 #include <gammaray/core/probe.h>
 
@@ -14,6 +15,8 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QWidget>
+
+#include <boost/algorithm/string/join.hpp>
 
 namespace shakespear
 {
@@ -25,8 +28,8 @@ ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
 {
     // Initialize logger
     const std::string logConfig
-        = rio::configPath() + "/" + "shakespear.log.ini";
-    m_logger.reset(new rio::logger::Log(logConfig));
+        = appkit::configPath() + "/" + "shakespear.log.ini";
+    m_logger.reset(new appkit::logger::Log(logConfig));
 
     Q_UNUSED(probe);
     constexpr auto initTimeout = 100;
@@ -47,20 +50,21 @@ void ShakespearPlugin::initialize()
     if (probe->isInitialized())
     {
         m_startupTimer.stop();
-        SHAKESPEAR_INFO("initialized", "Probe");
+        LOG_INFO << tr("Probe initialized");
 
         auto model = probe->objectTreeModel();
         m_selector = new shakespear::GammarayObjectSelector(*model, *m_engine);
 
         auto selector = m_engine->newQObject(m_selector);
         m_engine->globalObject().setProperty("Shakespear", selector);
-        //        importModule(":/js/core");
-        evaluate("function findObject(selector) { var object = "
-                 "Shakespear.findObject(selector); return object;}");
+        importModule(":/js/core.mjs");
+        //        evaluate("function findObject(selector) { var object = "
+        //                 "Shakespear.findObject(selector); return object;}");
 
-        m_server->listen(QHostAddress("192.168.3.26"), 56000);
+        m_server->listen(QHostAddress("127.0.0.1"), 56000);
 
-        evaluate("var lineEdit = findObject('.QLineEdit'); "
+        evaluate("import {findObject} from :/js/core.mjs"
+                 "var lineEdit = findObject('.QLineEdit'); "
                  "lineEdit.text = 'Welcome, JS2';"
                  "Shakespear.findObject('QLabel').setText('New label');");
     }
@@ -68,7 +72,7 @@ void ShakespearPlugin::initialize()
 
 void ShakespearPlugin::acceptConnection()
 {
-    SHAKESPEAR_INFO("acceptConnection", "ShakespearPlugin");
+    LOG_INFO << tr("Incoming connection");
     auto socket = m_server->nextPendingConnection();
 
     connect(
@@ -93,25 +97,26 @@ void ShakespearPlugin::readScript()
 
     if (m_inputStream.commitTransaction())
     {
-        SHAKESPEAR_INFO("received", "Script") << rio::strings::toUtf8(script);
+        LOG_INFO << tr("Script received: \n%1").arg(script);
         evaluate(script);
     }
 }
 
 void ShakespearPlugin::importModule(const QString& name)
 {
-    QJSValue result = m_engine->importModule(name);
-    if (result.isError())
+    QJSValue module = m_engine->importModule(name);
+    QJSValue sumFunction = module.property("findObject");
+    //    QJSValue result = sumFunction.call(args);
+
+    if (sumFunction.isError())
     {
-        SHAKESPEAR_ERROR("importModule", "Engine")
-            << rio::strings::toUtf8(result.toString());
+        LOG_ERROR
+            << tr("Error importing module %2").arg(sumFunction.toString());
     }
     else
     {
-        SHAKESPEAR_INFO("importModule", "Engine") << SHAKESPEAR_TR(
-            "Symbols {1} from {2} imported succesfully",
-            rio::strings::toUtf8(result.toString()),
-            rio::strings::toUtf8(name));
+        LOG_INFO << tr("Symbols %1 from %2 imported succesfully")
+                        .arg(sumFunction.toString(), name);
     }
 }
 
@@ -120,10 +125,9 @@ void ShakespearPlugin::evaluate(const QString& script)
     auto result = m_engine->evaluate(script);
     if (result.isError())
     {
-        SHAKESPEAR_ERROR("evaluate", "Engine") << SHAKESPEAR_TR(
-            "{1}. Line: {2}",
-            rio::strings::toUtf8(result.toString()),
-            rio::strings::toUtf8(result.property("line").toString()));
+        LOG_ERROR
+            << tr("Error evaluating script: %1. Line: %2")
+                   .arg(result.toString(), result.property("line").toString());
     }
 }
 

@@ -1,26 +1,38 @@
 #pragma once
 
-#include "coriolis/exception/General.h"
-#include "coriolis/qt/StringUtils.h"
+#include "exception/General.h"
+#include "qt/Strings.h"
 
 #include <QString>
-
-namespace shakespear
-{
 
 namespace exception
 {
 
-class InvalidSelector : public rio::exception::General
+/**
+ * Type for passing extra details to exception. One can use it to pass
+ * arbitrary string to exception
+ */
+using Selector = boost::error_info<struct selector_, QString>;
+
+class InvalidSelector : public exception::General
 {
 public:
     explicit InvalidSelector(const QString& selector)
     {
-        (*this) << (rio::exception::ExceptionInfo(
-            rio::strings::toUtf8(selector)));
+        (*this) << (Selector(selector));
     }
 };
 
-} // namespace exception
+class InvalidMatcher : public exception::General
+{
+};
 
-} // namespace shakespear
+class DuplicateUniqueMatcher : public InvalidMatcher
+{
+};
+
+class EmptyMatcher : public InvalidMatcher
+{
+};
+
+} // namespace exception

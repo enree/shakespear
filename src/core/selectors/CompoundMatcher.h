@@ -22,13 +22,13 @@ public:
 
     bool match(const QObject& object) const override;
 
-private:
-    std::vector<std::unique_ptr<ObjectMatcher> > m_matchers;
-};
+    /**
+     * Return true if matcher is empty
+     */
+    bool empty() const;
 
-/**
- * Build matcher from given @a selector
- */
-std::unique_ptr<CompoundMatcher> buildMatcher(const QString& selector);
+private:
+    std::vector<std::unique_ptr<ObjectMatcher>> m_matchers;
+};
 
 } // namespace shakespear

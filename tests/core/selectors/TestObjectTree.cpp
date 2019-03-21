@@ -7,7 +7,7 @@
 namespace shakespear
 {
 
-class ObjectItem : public rio::models::TreeItem
+class ObjectItem : public models::TreeItem
 {
 public:
     explicit ObjectItem(gsl::not_null<QObject*> object) : m_object(object) {}
@@ -77,7 +77,8 @@ TestObjectTree::TestObjectTree(QObject* parent) : TreeModel(parent)
             QStringList() << "otherown"
                           << "shared" } }));
 
-    auto thirdItem = createItem<QAlternativeSubSubclass>("edit", {});
+    auto thirdItem = createItem<QAlternativeSubSubclass>(
+        "edit", { { "text", QString("space beyond space") } });
 
     root->appendChild(firstItem);
     root->appendChild(secondItem);

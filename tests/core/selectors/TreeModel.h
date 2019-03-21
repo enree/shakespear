@@ -1,10 +1,6 @@
 /** @file
  * @brief      Tree model. Declaration.
  *
- * @ingroup RIO_QT
- *
- * @copyright  (C) 2015 PKB RIO Design Department
- *
  * $Id: $
  */
 
@@ -12,10 +8,7 @@
 
 #include <QAbstractItemModel>
 
-#include <boost/scoped_ptr.hpp>
-
-namespace rio
-{
+#include <memory>
 
 namespace models
 {
@@ -56,7 +49,8 @@ public:
     void setRootItem(TreeItem* item);
 
     /**
-     * Returns a pointer to the AbstractTreeItem associated with the given index.
+     * Returns a pointer to the AbstractTreeItem associated with the given
+     * index.
      */
     TreeItem* itemForIndex(const QModelIndex& index) const;
 
@@ -88,8 +82,8 @@ public:
     /**
      * Reimplemented from QAbstractItemModel
      */
-    QModelIndex index(int row, int column,
-                      const QModelIndex& index = QModelIndex()) const;
+    QModelIndex
+    index(int row, int column, const QModelIndex& index = QModelIndex()) const;
 
     /**
      * Reimplemented from QAbstractItemModel
@@ -99,28 +93,25 @@ public:
     /**
      * Reimplemented from QAbstractItemModel
      */
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    Qt::ItemFlags flags(const QModelIndex& index) const;
 
     /**
      * Reimplemented from QAbstractItemModel
      */
-    bool hasChildren(const QModelIndex &index) const;
+    bool hasChildren(const QModelIndex& index) const;
 
     /**
      * Reimplemented from QAbstractItemModel
      */
-    bool canFetchMore(const QModelIndex &index) const;
+    bool canFetchMore(const QModelIndex& index) const;
 
     /**
      * Reimplemented from QAbstractItemModel
      */
-    void fetchMore(const QModelIndex &index);
+    void fetchMore(const QModelIndex& index);
 
 private:
-    boost::scoped_ptr<TreeItem> m_root;
+    std::unique_ptr<TreeItem> m_root;
 };
 
-} // models
-
-} // rio
-
+} // namespace models

@@ -1,14 +1,11 @@
 #pragma once
 
-#include "coriolis/exception/General.h"
-
-namespace shakespear
-{
+#include "exception/General.h"
 
 namespace exception
 {
 
-class LookupError : public rio::exception::General
+class LookupError : public exception::General
 {
 };
 
@@ -21,5 +18,3 @@ class MultipleObjectsFound : public LookupError
 };
 
 } // namespace exception
-
-} // namespace shakespear
