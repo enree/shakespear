@@ -11,6 +11,19 @@
 namespace shakespear
 {
 
+template <typename C>
+QVariantList toVariantList(const C& container)
+{
+    QVariantList variantList;
+    variantList.reserve(container.size());
+    std::transform(
+        container.begin(),
+        container.end(),
+        std::back_inserter(variantList),
+        [](auto v) { return QVariant::fromValue(v); });
+    return variantList;
+}
+
 const auto role = GammaRay::ObjectModel::ObjectRole;
 
 GammarayObjectSelector::GammarayObjectSelector(
@@ -59,12 +72,7 @@ QVariantList GammarayObjectSelector::findObjects(const QString& selector)
     {
         auto objects = shakespear::ObjectsSelector(selector, &m_model, role)
                            .findObjects();
-        QVariantList variantList;
-        for (auto object: objects)
-        {
-            variantList.push_back(QVariant::fromValue(object));
-        }
-        return variantList;
+        return toVariantList(objects);
     }
     catch (const std::exception& ex)
     {
