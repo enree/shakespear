@@ -95,6 +95,10 @@ void TestRunnerConfig::setAut(const QString& aut)
     m_options.setLaunchArguments(aut.split(" "));
 }
 
+constexpr auto port = 56000;
+constexpr auto timeout = 500;
+constexpr auto attempts = 5;
+
 TestRunner::TestRunner(
     int argc,
     char** argv,
@@ -102,8 +106,8 @@ TestRunner::TestRunner(
     QCoreApplication* app,
     appkit::Paths paths)
     : appkit::Application(argc, argv, manifest, app, std::move(paths))
-    , m_networkClient(std::make_unique<
-                      NetworkClient>(QHostAddress("127.0.0.1"), 56000, 500, 5))
+    , m_networkClient(std::make_unique<NetworkClient>(
+          QHostAddress("127.0.0.1"), port, timeout, attempts))
 {
     connect(m_networkClient.get(), &NetworkClient::connected, this, [this]() {
         emit message(tr("Connected to test server"));

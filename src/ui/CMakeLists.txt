@@ -7,7 +7,6 @@ sharedLib(${PROJECT_NAME}
     GLOBBING "*"
     QT Core Gui Widgets
     COMPONENT ${PROJECT_NAME}
-    RECURSIVE true
     DEPENDS shakespear_launcher)
 
 lint(${PROJECT_NAME})

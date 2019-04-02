@@ -62,11 +62,6 @@ void ShakespearPlugin::initialize()
         //                 "Shakespear.findObject(selector); return object;}");
 
         m_server->listen(QHostAddress("127.0.0.1"), 56000);
-
-        evaluate("import {findObject} from :/js/core.mjs"
-                 "var lineEdit = findObject('.QLineEdit'); "
-                 "lineEdit.text = 'Welcome, JS2';"
-                 "Shakespear.findObject('QLabel').setText('New label');");
     }
 }
 
