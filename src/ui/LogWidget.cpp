@@ -11,6 +11,7 @@ namespace ui
 
 LogWidget::LogWidget(QWidget* parent)
 {
+    Q_UNUSED(parent);
     auto gridLayout = new QGridLayout(this);
     gridLayout->setSpacing(4);
     gridLayout->setContentsMargins(2, 2, 2, 2);
@@ -22,8 +23,11 @@ LogWidget::LogWidget(QWidget* parent)
 
     gridLayout->addWidget(m_tabWidget, 0, 1, 2, 1);
 
+    constexpr auto width = 10;
+    constexpr auto height = 0;
     gridLayout->addItem(
-        new QSpacerItem(10, 0, QSizePolicy::Minimum, QSizePolicy::Expanding),
+        new QSpacerItem(
+            width, height, QSizePolicy::Minimum, QSizePolicy::Expanding),
         1,
         0,
         1,

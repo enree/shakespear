@@ -92,7 +92,7 @@ public:
         return matcher;
     }
 
-    bool empty() const
+    [[nodiscard]] bool empty() const
     {
         return m_matcher->empty();
     }

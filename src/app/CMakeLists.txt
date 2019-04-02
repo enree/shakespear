@@ -8,7 +8,7 @@ executable(${PROJECT_NAME}
     QT Core Gui Widgets
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS shakespear_ui gammaray_launcher appkit_log appkit_app)
+    DEPENDS shakespear_ui gammaray_launcher appkit_log appkit_app log_widget)
 
 lint(${PROJECT_NAME})
 
