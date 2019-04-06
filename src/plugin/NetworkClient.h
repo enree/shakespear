@@ -37,6 +37,10 @@ signals:
      * Client is disconnected from host
      */
     void disconnected();
+    /**
+     * New message has arrived
+     */
+    void received(QByteArray message);
 
 public slots:
     /**

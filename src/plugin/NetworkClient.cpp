@@ -1,5 +1,6 @@
 #include "NetworkClient.h"
 
+#include "core/SocketReader.h"
 #include "log/Log.h"
 
 #include "qt/Strings.h"
@@ -42,6 +43,10 @@ NetworkClient::NetworkClient(
         &NetworkClient::connectionError);
 
     connect(&m_timer, &QTimer::timeout, this, &NetworkClient::tryToConnect);
+
+    auto socketReader = new SocketReader(m_socket.get());
+    connect(
+        socketReader, &SocketReader::received, this, &NetworkClient::received);
 }
 
 void NetworkClient::send(const QString& data)

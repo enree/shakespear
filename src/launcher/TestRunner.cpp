@@ -3,7 +3,7 @@
 #include "shakespear/Translate.h"
 
 #include "InvalidRunOptions.h"
-#include "NetworkClient.h"
+#include "NetworkServer.h"
 
 #include "gsl/gsl_assert"
 #include "log/Log.h"
@@ -96,8 +96,6 @@ void TestRunnerConfig::setAut(const QString& aut)
 }
 
 constexpr auto port = 56000;
-constexpr auto timeout = 500;
-constexpr auto attempts = 5;
 
 TestRunner::TestRunner(
     int argc,
@@ -106,16 +104,7 @@ TestRunner::TestRunner(
     QCoreApplication* app,
     appkit::Paths paths)
     : appkit::Application(argc, argv, manifest, app, std::move(paths))
-    , m_networkClient(std::make_unique<NetworkClient>(
-          QHostAddress("127.0.0.1"), port, timeout, attempts))
 {
-    connect(m_networkClient.get(), &NetworkClient::connected, this, [this]() {
-        emit message(tr("Connected to test server"));
-    });
-
-    connect(m_networkClient.get(), &NetworkClient::disconnected, this, [this]() {
-        emit message(tr("Disconnected from test server"));
-    });
 }
 
 TestRunner::~TestRunner()
@@ -135,7 +124,6 @@ void TestRunner::runTestSuite()
                 emit message(
                     tr("AUT %1 ready")
                         .arg(m_config.options().launchArguments().join(" ")));
-                m_networkClient->connectToHost();
             });
 
             connect(m_testRun, &TestRun::autStopped, this, [this]() {
@@ -164,13 +152,19 @@ void TestRunner::stopTestSuite()
     if (m_testRun != nullptr)
     {
         m_testRun->interrupt();
-        m_networkClient->disconnectFromHost();
     }
 }
 
 void TestRunner::runTestCase(const QString& testCase)
 {
-    m_networkClient->send(testCase);
+    try
+    {
+        //        m_networkServer->send();
+    }
+    catch (const std::exception& ex)
+    {
+        LOG_WARNING << tr("Unable to send test case: %1").arg(ex.what());
+    }
 }
 
 void TestRunner::addSpecificOptions(ConfigParser& configParser)
@@ -179,6 +173,12 @@ void TestRunner::addSpecificOptions(ConfigParser& configParser)
         "runner",
         SHAKESPEAR_TR("Runner options"),
         createTestRunnerConfigParser(m_config));
+}
+
+void TestRunner::initialize()
+{
+    m_networkServer
+        = std::make_unique<NetworkServer>(QHostAddress("127.0.0.1"), port);
 }
 
 } // namespace shakespear
