@@ -9,22 +9,10 @@
     </message>
 </context>
 <context>
-    <name>shakespear::NetworkClient</name>
+    <name>shakespear::NetworkServer</name>
     <message>
-        <source>Can&apos;t connect to host</source>
-        <translation>Невозможно соединиться с хостом</translation>
-    </message>
-    <message>
-        <source>Error connecting %1</source>
-        <translation>Ошибка соединения: %1</translation>
-    </message>
-    <message>
-        <source>Retry in %1 ms</source>
-        <translation>Повтор через %1 мс</translation>
-    </message>
-    <message>
-        <source>Connecting. %1 of %2</source>
-        <translation>Соединение. Попытка %1 из %2</translation>
+        <source>Incoming connection</source>
+        <translation>Входящее соединение</translation>
     </message>
 </context>
 <context>
@@ -38,16 +26,12 @@
         <translation>Приложение закрыто</translation>
     </message>
     <message>
-        <source>Connected to test server</source>
-        <translation>Соединен с тестовым сервером</translation>
-    </message>
-    <message>
-        <source>Disconnected from test server</source>
-        <translation>Отсоединен от тестового сервера</translation>
-    </message>
-    <message>
         <source>Application failed to start. %1</source>
         <translation>Невозможно запустить приложение: %1</translation>
+    </message>
+    <message>
+        <source>Unable to send test case: %1</source>
+        <translation>Невозможно отослать тест кейс: %1</translation>
     </message>
 </context>
 </TS>

@@ -1,8 +1,11 @@
 #include "ShakespearPlugin.h"
 
 #include "GammarayObjectSelector.h"
+#include "NetworkClient.h"
 #include "Paths.h"
 #include "shakespear/Translate.h"
+
+#include "core/MessageCodec.h"
 
 #include "qt/Strings.h"
 #include "qt/TranslationInstaller.h"
@@ -21,10 +24,15 @@
 namespace shakespear
 {
 
+constexpr auto port = 56000;
+constexpr auto timeout = 500;
+constexpr auto attempts = 5;
+
 ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
     : QObject(parent)
     , m_engine(std::make_unique<QJSEngine>())
-    , m_server(std::make_unique<QTcpServer>())
+    , m_client(std::make_unique<NetworkClient>(
+          QHostAddress("127.0.0.1"), port, timeout, attempts))
 {
     // Initialize logger
     const std::string logConfig
@@ -37,11 +45,17 @@ ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
         &m_startupTimer, &QTimer::timeout, this, &ShakespearPlugin::initialize);
     m_startupTimer.start(initTimeout);
 
+    auto messageCodec = new MessageCodec(this);
     connect(
-        m_server.get(),
-        &QTcpServer::newConnection,
+        m_client.get(),
+        &NetworkClient::received,
+        messageCodec,
+        &MessageCodec::decode);
+    connect(
+        messageCodec,
+        &MessageCodec::testCase,
         this,
-        &ShakespearPlugin::acceptConnection);
+        &ShakespearPlugin::executeTestCase);
 }
 
 void ShakespearPlugin::initialize()
@@ -49,6 +63,8 @@ void ShakespearPlugin::initialize()
     auto probe = GammaRay::Probe::instance();
     if (probe->isInitialized())
     {
+        m_client->connectToHost();
+
         m_startupTimer.stop();
         LOG_INFO << tr("Probe initialized");
 
@@ -60,41 +76,14 @@ void ShakespearPlugin::initialize()
         importModule(":/js/core.mjs");
         //        evaluate("function findObject(selector) { var object = "
         //                 "Shakespear.findObject(selector); return object;}");
-
-        m_server->listen(QHostAddress("127.0.0.1"), 56000);
     }
 }
 
-void ShakespearPlugin::acceptConnection()
+void ShakespearPlugin::executeTestCase(const TestCase& testCase)
 {
-    LOG_INFO << tr("Incoming connection");
-    auto socket = m_server->nextPendingConnection();
-
-    connect(
-        socket, &QAbstractSocket::disconnected, socket, &QObject::deleteLater);
-
-    connect(
-        socket,
-        &QAbstractSocket::readyRead,
-        this,
-        &ShakespearPlugin::readScript);
-
-    m_inputStream.setDevice(socket);
-    m_inputStream.setVersion(QDataStream::Qt_5_12);
-}
-
-void ShakespearPlugin::readScript()
-{
-    m_inputStream.startTransaction();
-
-    QString script;
-    m_inputStream >> script;
-
-    if (m_inputStream.commitTransaction())
-    {
-        LOG_INFO << tr("Script received: \n%1").arg(script);
-        evaluate(script);
-    }
+    // Decode and evaluate
+    LOG_INFO << tr("Test case received: \n%1").arg(testCase.name);
+    evaluate(testCase.script);
 }
 
 void ShakespearPlugin::importModule(const QString& name)

@@ -8,7 +8,8 @@ sharedLib(${PROJECT_NAME}
     QT Core Gui Widgets Network
     COMPONENT ${PROJECT_NAME}
     RECURSIVE true
-    DEPENDS appkit_log appkit_core appkit_config appkit_app gammaray_launcher)
+    DEPENDS appkit_log appkit_core appkit_config appkit_app gammaray_launcher
+    shakespear_core)
 
 lint(${PROJECT_NAME})
 

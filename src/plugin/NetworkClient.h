@@ -37,12 +37,16 @@ signals:
      * Client is disconnected from host
      */
     void disconnected();
+    /**
+     * New message has arrived
+     */
+    void received(QByteArray message);
 
 public slots:
     /**
      * Send data to server
      */
-    void send(const QString& data);
+    void write(const QByteArray& data);
     /**
      * Connect to remote server
      */

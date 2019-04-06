@@ -2,14 +2,14 @@
 
 #include "log/Log.h"
 
-#include <QDataStream>
+#include "core/TestCase.h"
+
 #include <QObject>
 #include <QTimer>
 
 #include <memory>
 
 class QJSEngine;
-class QTcpServer;
 
 namespace GammaRay
 {
@@ -22,6 +22,7 @@ namespace shakespear
 {
 
 class GammarayObjectSelector;
+class NetworkClient;
 
 /**
  * Host part of Shakespear
@@ -36,8 +37,7 @@ public:
 
 private slots:
     void initialize();
-    void acceptConnection();
-    void readScript();
+    void executeTestCase(const shakespear::TestCase& testCase);
 
 private:
     void importModule(const QString& name);
@@ -50,10 +50,8 @@ private:
 
     QTimer m_startupTimer;
 
-    std::unique_ptr<QTcpServer> m_server;
+    std::unique_ptr<NetworkClient> m_client;
     std::unique_ptr<appkit::logger::Log> m_logger;
-
-    QDataStream m_inputStream;
 };
 
 } // namespace shakespear
