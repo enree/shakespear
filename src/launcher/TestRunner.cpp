@@ -168,6 +168,29 @@ void TestRunner::runTestCase(const QString& testCase)
     }
 }
 
+void TestRunner::testResult(const TestResult& testResult)
+{
+    switch (testResult.code)
+    {
+    case TestResult::Code::PASSED:
+        emit message(tr("Test case %1 passed").arg(testResult.name));
+        break;
+    case TestResult::Code::FAILED:
+        emit message(tr("Test case %1 failed: %2")
+                         .arg(testResult.name, testResult.texts.join(", ")));
+        break;
+    case TestResult::Code::INVALID_TEST_CASE:
+        emit message(tr("Invalid test case %1: %2")
+                         .arg(testResult.name, testResult.texts.join(", ")));
+        break;
+    }
+}
+
+void TestRunner::customMessage(const CustomMessage& customMessage)
+{
+    emit message(tr("%1").arg(customMessage.text));
+}
+
 void TestRunner::addSpecificOptions(ConfigParser& configParser)
 {
     configParser.addSubtreeOption(
@@ -187,6 +210,13 @@ void TestRunner::initialize()
         &NetworkServer::received,
         messageCodec,
         &MessageCodec::decode);
+    connect(
+        messageCodec,
+        &MessageCodec::customMessage,
+        this,
+        &TestRunner::customMessage);
+    connect(
+        messageCodec, &MessageCodec::testResult, this, &TestRunner::testResult);
 }
 
 } // namespace shakespear

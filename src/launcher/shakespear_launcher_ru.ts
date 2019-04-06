@@ -33,5 +33,21 @@
         <source>Unable to send test case: %1</source>
         <translation>Невозможно отослать тест кейс: %1</translation>
     </message>
+    <message>
+        <source>Test case %1 passed</source>
+        <translation>Тест кейс %1 пройден</translation>
+    </message>
+    <message>
+        <source>Test case %1 failed: %2</source>
+        <translation>Тест кейс %1 провален: %2</translation>
+    </message>
+    <message>
+        <source>Invalid test case %1: %2</source>
+        <translation>Ошибочный тест кейс %1: %2</translation>
+    </message>
+    <message>
+        <source>%1</source>
+        <translation>%1</translation>
+    </message>
 </context>
 </TS>
