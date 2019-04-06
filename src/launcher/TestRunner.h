@@ -64,6 +64,10 @@ public slots:
     void stopTestSuite();
     void runTestCase(const QString& testCase);
 
+private slots:
+    void testResult(const TestResult& testResult);
+    void customMessage(const CustomMessage& customMessage);
+
 private:
     void addSpecificOptions(ConfigParser& configParser) override;
     void initialize() override;

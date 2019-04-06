@@ -33,6 +33,13 @@ void MessageCodec::decode(QByteArray block)
         emit testCase(_testCase);
         break;
     }
+    case MessageType::TEST_RESULT:
+    {
+        TestResult _testResult;
+        out >> _testResult;
+        emit testResult(_testResult);
+        break;
+    }
     default:;
         // Do nothing
     }

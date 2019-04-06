@@ -33,6 +33,7 @@ ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
     , m_engine(std::make_unique<QJSEngine>())
     , m_client(std::make_unique<NetworkClient>(
           QHostAddress("127.0.0.1"), port, timeout, attempts))
+    , m_codec(std::make_unique<MessageCodec>())
 {
     // Initialize logger
     const std::string logConfig
@@ -45,14 +46,13 @@ ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
         &m_startupTimer, &QTimer::timeout, this, &ShakespearPlugin::initialize);
     m_startupTimer.start(initTimeout);
 
-    auto messageCodec = new MessageCodec(this);
     connect(
         m_client.get(),
         &NetworkClient::received,
-        messageCodec,
+        m_codec.get(),
         &MessageCodec::decode);
     connect(
-        messageCodec,
+        m_codec.get(),
         &MessageCodec::testCase,
         this,
         &ShakespearPlugin::executeTestCase);
@@ -69,10 +69,11 @@ void ShakespearPlugin::initialize()
         LOG_INFO << tr("Probe initialized");
 
         auto model = probe->objectTreeModel();
-        m_selector = new shakespear::GammarayObjectSelector(*model, *m_engine);
+        auto selectorObject
+            = new shakespear::GammarayObjectSelector(*model, *m_engine);
 
-        auto selector = m_engine->newQObject(m_selector);
-        m_engine->globalObject().setProperty("Shakespear", selector);
+        auto selector = m_engine->newQObject(selectorObject);
+        m_engine->globalObject().setProperty("ObjectSelector", selector);
         importModule(":/js/core.mjs");
         //        evaluate("function findObject(selector) { var object = "
         //                 "Shakespear.findObject(selector); return object;}");
@@ -81,9 +82,13 @@ void ShakespearPlugin::initialize()
 
 void ShakespearPlugin::executeTestCase(const TestCase& testCase)
 {
-    // Decode and evaluate
-    LOG_INFO << tr("Test case received: \n%1").arg(testCase.name);
-    evaluate(testCase.script);
+    LOG_DEBUG << tr("Test case received: \n%1").arg(testCase.name);
+
+    auto block = m_codec->encode(
+        CustomMessage{ tr("Executing test case %1").arg(testCase.name) });
+    m_client->write(block);
+
+    evaluate(testCase);
 }
 
 void ShakespearPlugin::importModule(const QString& name)
@@ -104,15 +109,27 @@ void ShakespearPlugin::importModule(const QString& name)
     }
 }
 
-void ShakespearPlugin::evaluate(const QString& script)
+void ShakespearPlugin::evaluate(const TestCase& testCase)
 {
-    auto result = m_engine->evaluate(script);
+    TestResult testResult;
+    testResult.name = testCase.name;
+
+    auto result = m_engine->evaluate(testCase.script);
     if (result.isError())
     {
-        LOG_ERROR
-            << tr("Error evaluating script: %1. Line: %2")
-                   .arg(result.toString(), result.property("line").toString());
+        testResult.code = TestResult::Code::INVALID_TEST_CASE;
+        QString error
+            = tr("Error evaluating script: %1. Line: %2")
+                  .arg(result.toString(), result.property("line").toString());
+        testResult.texts = QStringList() << error;
+        LOG_DEBUG << error;
     }
+    else
+    {
+        testResult.code = TestResult::Code::PASSED;
+    }
+
+    m_client->write(m_codec->encode(testResult));
 }
 
 ShakespearPlugin::~ShakespearPlugin() = default;
