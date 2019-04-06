@@ -30,10 +30,12 @@ void NetworkServer::send(const QByteArray& data)
 {
     if (!m_socket.isNull())
     {
-        m_socket->write(data);
+        writeToSocket(*m_socket, data);
     }
-
-    BOOST_THROW_EXCEPTION(exception::InvalidConnection());
+    else
+    {
+        BOOST_THROW_EXCEPTION(exception::InvalidConnection());
+    }
 }
 
 NetworkServer::~NetworkServer() = default;
@@ -41,7 +43,7 @@ NetworkServer::~NetworkServer() = default;
 void NetworkServer::acceptConnection()
 {
     LOG_INFO << tr("Incoming connection");
-    auto m_socket = m_server->nextPendingConnection();
+    m_socket = m_server->nextPendingConnection();
 
     connect(
         m_socket,

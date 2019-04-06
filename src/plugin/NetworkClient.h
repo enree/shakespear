@@ -46,7 +46,7 @@ public slots:
     /**
      * Send data to server
      */
-    void send(const QString& data);
+    void write(const QByteArray& data);
     /**
      * Connect to remote server
      */

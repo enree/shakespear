@@ -2,7 +2,8 @@
 
 #include "log/Log.h"
 
-#include <QDataStream>
+#include "core/TestCase.h"
+
 #include <QObject>
 #include <QTimer>
 
@@ -36,7 +37,7 @@ public:
 
 private slots:
     void initialize();
-    void processIncomingMessage(QByteArray message);
+    void executeTestCase(const shakespear::TestCase& testCase);
 
 private:
     void importModule(const QString& name);

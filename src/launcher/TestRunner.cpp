@@ -159,7 +159,8 @@ void TestRunner::runTestCase(const QString& testCase)
 {
     try
     {
-        //        m_networkServer->send();
+        TestCase _testCase = { "InlineTestCase", testCase };
+        m_networkServer->send(m_messageCodec.encode(_testCase));
     }
     catch (const std::exception& ex)
     {
@@ -179,6 +180,13 @@ void TestRunner::initialize()
 {
     m_networkServer
         = std::make_unique<NetworkServer>(QHostAddress("127.0.0.1"), port);
+
+    auto messageCodec = new MessageCodec(this);
+    connect(
+        m_networkServer.get(),
+        &NetworkServer::received,
+        messageCodec,
+        &MessageCodec::decode);
 }
 
 } // namespace shakespear

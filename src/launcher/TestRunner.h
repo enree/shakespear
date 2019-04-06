@@ -5,6 +5,7 @@
 
 #include "app/Application.h"
 #include "config/ConfigParser.h"
+#include "core/MessageCodec.h"
 
 #include "gammaray/launcher/launchoptions.h"
 
@@ -71,6 +72,7 @@ private:
     TestRunnerConfig m_config;
     QPointer<TestRun> m_testRun;
     std::unique_ptr<NetworkServer> m_networkServer;
+    MessageCodec m_messageCodec;
 };
 
 } // namespace shakespear

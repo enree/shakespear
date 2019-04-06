@@ -49,13 +49,9 @@ NetworkClient::NetworkClient(
         socketReader, &SocketReader::received, this, &NetworkClient::received);
 }
 
-void NetworkClient::send(const QString& data)
+void NetworkClient::write(const QByteArray& data)
 {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_12);
-    out << data;
-    m_socket->write(block);
+    writeToSocket(*m_socket, data);
 }
 
 void NetworkClient::connectToHost()

@@ -20,7 +20,11 @@ private slots:
     void read();
 
 private:
-    QDataStream m_inputStream;
+    QTcpSocket* m_socket;
+    QByteArray m_buffer;
+    qint32 m_bufferSize = 0;
 };
+
+void writeToSocket(QTcpSocket& socket, const QByteArray& array);
 
 } // namespace shakespear

@@ -5,6 +5,8 @@
 #include "Paths.h"
 #include "shakespear/Translate.h"
 
+#include "core/MessageCodec.h"
+
 #include "qt/Strings.h"
 #include "qt/TranslationInstaller.h"
 
@@ -43,11 +45,17 @@ ShakespearPlugin::ShakespearPlugin(GammaRay::Probe* probe, QObject* parent)
         &m_startupTimer, &QTimer::timeout, this, &ShakespearPlugin::initialize);
     m_startupTimer.start(initTimeout);
 
+    auto messageCodec = new MessageCodec(this);
     connect(
         m_client.get(),
         &NetworkClient::received,
+        messageCodec,
+        &MessageCodec::decode);
+    connect(
+        messageCodec,
+        &MessageCodec::testCase,
         this,
-        &ShakespearPlugin::processIncomingMessage);
+        &ShakespearPlugin::executeTestCase);
 }
 
 void ShakespearPlugin::initialize()
@@ -55,6 +63,8 @@ void ShakespearPlugin::initialize()
     auto probe = GammaRay::Probe::instance();
     if (probe->isInitialized())
     {
+        m_client->connectToHost();
+
         m_startupTimer.stop();
         LOG_INFO << tr("Probe initialized");
 
@@ -66,16 +76,14 @@ void ShakespearPlugin::initialize()
         importModule(":/js/core.mjs");
         //        evaluate("function findObject(selector) { var object = "
         //                 "Shakespear.findObject(selector); return object;}");
-
-        m_client->connectToHost();
     }
 }
 
-void ShakespearPlugin::processIncomingMessage(QByteArray message)
+void ShakespearPlugin::executeTestCase(const TestCase& testCase)
 {
     // Decode and evaluate
-    //    LOG_INFO << tr("Script received: \n%1").arg(script);
-    //    evaluate(script);
+    LOG_INFO << tr("Test case received: \n%1").arg(testCase.name);
+    evaluate(testCase.script);
 }
 
 void ShakespearPlugin::importModule(const QString& name)
